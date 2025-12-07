@@ -69,6 +69,5 @@ const games = [
     {name:"Tomb of the Mask Color", url:"tomb-of-the-mask-color/", grade:"high-school-only"},
     {name:"Truck Loader 5", url:"truck-loader-5/", grade:"high-school-only"},
     {name:"The Knights Battle Arena", url:"war-the-knights-battle-arena-swords/?login.live.com", grade:"all-grades"},
-    {name:"We Become What We Behold", url:"we-become-what-we-behold/?login.live.com", grade:"all-grades"},
-    {name:"Wordle Unlimited", url:"wordle-unlimited/?login.live.com", grade:"all-grades"}
+    {name:"We Become What We Behold", url:"we-become-what-we-behold/?login.live.com", grade:"all-grades"}
 ];
