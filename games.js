@@ -61,6 +61,7 @@ const games = [
     {name:"Run 3", url:"run3/?login.live.com", grade:"all-grades"},
     {name:"Santa Tracker: Snowball Storm", url:"snowball-storm/?login.live.com", grade:"all-grades"},
     {name:"Slope", url:"slope/?login.live.com", grade:"all-grades"},
+    {name:"Smash Karts (IF IT WORKS)", url:"smash-karts/", grade:"high-school-only"},
     {name:"Snake.io", url:"snakeio/?login.live.com", grade:"all-grades"},
     {name:"Snow Rider", url:"snow-rider/?login.live.com", grade:"all-grades"},
     {name:"Snowball.io", url:"snowballio/?login.live.com", grade:"all-grades"},
