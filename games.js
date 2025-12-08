@@ -26,6 +26,7 @@ const games = [
     {name:"Drive Mad (Fanmade)", url:"drive-mad-fanmade/?login.live.com", grade:"all-grades"},
     {name:"Drive Mad (Official)", url:"drive-mad-official/", grade:"high-school-only"},
     {name:"Duck Life 5", url:"duck-life-5/?login.live.com", grade:"all-grades"},
+    {name:"Duck Life 6", url:"duck-life-6/", grade:"high-school-only"},
     {name:"Eaglercraft 1.8", url:"eaglercraft-1.8/?login.live.com", grade:"all-grades"},
     {name:"Eaglercraft 1.12", url:"eaglercraft-1.12/?login.live.com", grade:"all-grades"},
     {name:"Emulator", url:"emulatorjs/", grade:"high-school-only"},
