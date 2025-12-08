@@ -7,6 +7,7 @@ const games = [
     {name:"Age of War", url:"age-of-war/?login.live.com", grade:"all-grades"},
     {name:"Among Us", url:"among-us/?login.live.com", grade:"all-grades"},
     {name:"Angry Birds", url:"angry-birds/", grade:"high-school-only"},
+    {name:"Awesome Tanks", url:"awesome-tanks/?login.live.com", grade:"all-grades"},
     {name:"Bad Ice Cream", url:"bad-ice-cream/", grade:"high-school-only"},
     {name:"Bad Time Simulator", url:"bad-time-simulator/?login.live.com", grade:"all-grades"},
     {name:"Basketball Stars", url:"basketball-stars/?login.live.com", grade:"all-grades"},
