@@ -16,7 +16,7 @@ const games = [
     {name:"Bloons TD 5", url:"bloons-tower-defense-5/", grade:"all-grades"},
     {name:"Bob The Robber 5", url:"bob-the-robber-5?login.live.com", grade:"all-grades"},
     {name:"Brawl Stars", url:"brawl-stars?login.live.com", grade:"all-grades"},
-    //{name:"Cookie Clicker", url:"cookie-click/", grade:"high-school-only"},
+    {name:"Cookie Clicker", url:"cookie-click/", grade:"all-grades"},
     {name:"Crossy Road", url:"crossy-road/", grade:"all-grades"},
     {name:"Cut the Rope", url:"cut-the-rope/", grade:"high-school-only"},
     {name:"Dadish", url:"dadish/", grade:"high-school-only"},
