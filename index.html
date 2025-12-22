@@ -575,7 +575,9 @@
                 <span>Favicon (Tab Icon)</span>
                 <div class="keybind-row" style="align-items:center;">
                     <input type="text" id="faviconInput" placeholder="Enter Full Favicon URL">
-                    <input type="file" id="faviconFileInput" accept="image/*" style="margin-left:8px">
+                    <input type="file" id="faviconFileInput" accept="image/*" style="display:none">
+                    <button class="save-btn" id="uploadFaviconBtn" style="margin-left:8px;padding:8px 10px;">Upload</button>
+                    <span id="faviconFileName" style="margin-left:8px;color:var(--subtext);font-size:0.95rem;"></span>
                     <button class="save-btn" id="saveFaviconBtn">Save</button>
                     <button class="reset-btn" id="resetFaviconBtn">Reset</button>
                     
@@ -615,6 +617,8 @@
             const faviconFileInput = document.getElementById("faviconFileInput");
             const saveFaviconBtn = document.getElementById("saveFaviconBtn");
             const resetFaviconBtn = document.getElementById("resetFaviconBtn");
+            const uploadFaviconBtn = document.getElementById("uploadFaviconBtn");
+            const faviconFileName = document.getElementById("faviconFileName");
             
             const faviconLinkEl = document.querySelector('link[rel~="icon"]');
             const ORIGINAL_FAV_HREF = faviconLinkEl ? faviconLinkEl.getAttribute('href') : null;
@@ -905,20 +909,16 @@
                     faviconInput.addEventListener('input', (e) => {
                         // typing a URL clears any pending uploaded file
                         pendingFaviconDataUrl = null;
+                        if (faviconFileName) faviconFileName.textContent = '';
+                        // do not validate while typing; defer validation until Save
                         const v = e.target.value.trim();
-                        // no inline preview; just keep the typed value
-                        // validate extension first
-                        if (v) {
-                            if (!urlHasAllowedExtension(v)) {
-                                faviconUrlValid = false; lastValidatedUrl = null;
-                                alert('Invalid file type — allowed: png, jpg, ico');
-                                return;
-                            }
-                            validateImageUrl(v).then(valid => {
-                                if (!valid) alert('Favicon URL is not a valid image.');
-                            });
+                        if (!v) {
+                            faviconUrlValid = false;
+                            lastValidatedUrl = null;
                         } else {
-                            faviconUrlValid = false; lastValidatedUrl = null;
+                            // keep the typed value but mark as not-yet-validated
+                            faviconUrlValid = false;
+                            lastValidatedUrl = null;
                         }
                     });
                 }
@@ -942,10 +942,18 @@
                             const dataUrl = ev.target.result;
                             pendingFaviconDataUrl = dataUrl;
                             if (faviconInput) faviconInput.value = '';
+                            if (faviconFileName) faviconFileName.textContent = file.name || '';
                             faviconUrlValid = true; lastValidatedUrl = null;
                         };
                         reader.readAsDataURL(file);
                     });
+                    // custom upload button wiring
+                    if (uploadFaviconBtn) {
+                        uploadFaviconBtn.addEventListener('click', (ev) => {
+                            ev.preventDefault();
+                            if (faviconFileInput) faviconFileInput.click();
+                        });
+                    }
                 }
 
                 if (saveFaviconBtn) {
@@ -961,6 +969,7 @@
                                 pendingFaviconDataUrl = null;
                                 if (faviconFileInput) faviconFileInput.value = '';
                                 if (faviconInput) faviconInput.value = '';
+                                if (faviconFileName) faviconFileName.textContent = '';
                                 alert('Favicon saved.\n\nThis will change the tab icon shown in your browser and will persist on this device until you reset it.');
                                 return;
                             }
@@ -979,6 +988,7 @@
                                         if (valid) {
                                             localStorage.setItem('cloakedFavicon', typed);
                                             setFavicon(typed);
+                                            if (faviconFileName) faviconFileName.textContent = '';
                                             alert('Favicon saved: ' + typed + "\n\nThis will change the tab icon shown in your browser and will persist on this device until you reset it.");
                                         } else {
                                             alert('Could not save favicon: the URL did not load as an image.');
@@ -1005,6 +1015,7 @@
                         faviconUrlValid = false; lastValidatedUrl = null;
                         // restore original
                         if (ORIGINAL_FAV_HREF) setFavicon(ORIGINAL_FAV_HREF);
+                        if (faviconFileName) faviconFileName.textContent = '';
                         alert('Favicon reset to default.');
                     });
                 }
