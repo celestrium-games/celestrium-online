@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Celestrium Online Portal</title>
+        <meta name="app-version" content="2.8.0">
         <link rel="icon" type="image/x-icon" href="./favicon.ico?login.live.com">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -998,6 +999,45 @@
                         alert('Favicon reset to default.');
                     });
                 }
+            })();
+        </script>
+
+        <!-- Auto-reload on navbar click if new version detected -->
+        <script>
+            (function() {
+                let currentVersion = document.querySelector('meta[name="app-version"]')?.content;
+                let updateAvailable = false;
+                
+                const checkForUpdates = async () => {
+                    try {
+                        const response = await fetch(window.location.href, { cache: 'no-store' });
+                        const html = await response.text();
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const newVersion = doc.querySelector('meta[name="app-version"]')?.content;
+                        
+                        if (newVersion && newVersion !== currentVersion) {
+                            updateAvailable = true;
+                            console.log('New version available:', newVersion);
+                        }
+                    } catch (error) {
+                        console.log('Version check failed (offline?)', error);
+                    }
+                };
+                
+                // Check for updates every minute
+                setInterval(checkForUpdates, 60 * 1000);
+                
+                // Reload on navbar link click if update available
+                const navLinks = document.querySelectorAll('nav .links a');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        if (updateAvailable) {
+                            e.preventDefault();
+                            location.reload();
+                        }
+                    });
+                });
             })();
         </script>
 
