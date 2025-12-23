@@ -9,7 +9,6 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
         <style>
-            /* ROOT VARIABLES */
             :root {
                 --bg: #f5f7fb;
                 --card: #ffffff;
@@ -18,7 +17,6 @@
                 --subtext: #777;
             }
 
-            /* DARK MODE VARIABLES */
             body.dark {
                 --bg: #121318;
                 --card: #1f2128;
@@ -27,7 +25,6 @@
                 --accent: #5ea8ff;
             }
 
-            /* BODY */
             body {
                 margin: 0;
                 font-family: 'Inter', sans-serif;
@@ -40,7 +37,6 @@
                 user-select: none;
             }
 
-            /* NAVBAR */
             nav {
                 display: flex;
                 justify-content: space-between;
@@ -60,7 +56,6 @@
                 cursor: pointer;
             }
 
-            /* Small utility classes */
             .logo-img { height: 50px; display: inline-block; }
             .center { text-align: center; }
             .mb-10 { margin-bottom: 10px; }
@@ -85,7 +80,6 @@
                 color: var(--accent);
             }
 
-            /* PAGE CONTAINERS */
             .page {
                 display: none;
                 padding: 40px;
@@ -94,10 +88,8 @@
                 animation: fade .3s ease;
             }
 
-            /* Show the active page */
             .page.active { display: block; }
 
-            /* utility spacing */
             .ml-8 { margin-left: 8px; }
 
             @keyframes fade {
@@ -105,7 +97,6 @@
                 to { opacity:1; transform:translateY(0); }
             }
 
-            /* HERO */
             .hero {
                 text-align: center;
                 margin-top: 40px;
@@ -122,7 +113,6 @@
                 font-size: 1.15rem;
             }
 
-            /* CARD GRID */
             .card-grid {
                 margin-top: 50px;
                 display: grid;
@@ -144,7 +134,6 @@
                 box-shadow: 0 4px 20px rgba(0,0,0,0.12);
             }
 
-            /* SEARCH BAR */
             .search-bar {
                 display: flex;
                 justify-content: center;
@@ -165,7 +154,6 @@
                 transition: background .25s, color .25s, border-color .25s;
             }
 
-            /* SCHOOL NOTE */
             .school-note {
                 color: var(--subtext);
                 text-align: center;
@@ -173,7 +161,6 @@
                 font-size: 0.95rem;
             }
 
-            /* GAMES CONTAINER */
             .games-container {
                 background: var(--card);
                 padding: 26px;
@@ -212,7 +199,6 @@
                 margin-bottom: 10px;
             }
 
-            /* ABOUT CARD */
             .about-card {
                 background: var(--card);
                 padding: 40px;
@@ -223,7 +209,6 @@
                 overflow: hidden;
             }
 
-            /* ABOUT LAYOUT */
             .about-hero {
                 text-align: center;
                 margin: 10px 0 28px 0;
@@ -311,13 +296,11 @@
 
             .about-section { margin-top: 18px; }
 
-            /* Responsive: stack columns on smaller screens */
             @media (max-width: 860px) {
                 .about-grid { grid-template-columns: 1fr; }
                 .about-side { order: 2; }
             }
 
-            /* SETTINGS ROW */
             .setting-row {
                 background: var(--card);
                 padding: 20px;
@@ -336,7 +319,6 @@
                 margin-left: 10px;
             }
 
-            /* MODERN DROPDOWN */
             select#defaultFilter {
                 padding: 8px 12px;
                 border-radius: 8px;
@@ -358,7 +340,6 @@
                 box-shadow: 0 0 5px rgba(74,144,226,0.5);
             }
 
-            /* TOGGLE SWITCH */
             .switch {
                 position: relative;
                 display: inline-block;
@@ -404,7 +385,6 @@
                 transform: translateX(24px);
             }
 
-            /* DARK MODE */
             body.dark .game-item {
                 background: #2a2c35;
                 color: #a3c9ff;
@@ -445,7 +425,6 @@
                 color: var(--subtext);
             }
 
-            /* IFRAME */
             #iframeWrapper {
                 display: none;
                 width: 100%;
@@ -458,7 +437,6 @@
                 border: none;
             }
 
-            /* KEYBIND ROW */
             .keybind-row {
                 display: flex;
                 gap: 10px;
@@ -507,7 +485,6 @@
                 color: #333;
             }
 
-            /* ADVANCED RESET BUTTON */
             #resetButton {
                 padding: 10px 18px;
                 border-radius: 8px;
@@ -527,7 +504,6 @@
 
     <body class="light">
         
-        <!-- NAVIGATION -->
         <nav role="navigation">
             <div class="logo" id="logoBtn"><img id="logoImg" src="./logo-light.png?login.live.com" alt="Celestrium Online" class="logo-img"></div>
             <div class="links" id="navLinks">
@@ -538,12 +514,10 @@
             </div>
         </nav>
 
-        <!-- IFRAME -->
         <div id="iframeWrapper">
             <iframe id="gameIframe" src=""></iframe>
         </div>
 
-        <!-- HOME PAGE -->
         <div id="home" class="page active">
             <div class="hero">
                 <h1>Welcome to Celestrium Online</h1>
@@ -578,7 +552,6 @@
             </div>
         </div>
 
-        <!-- ALL GAMES PAGE -->
         <div id="all" class="page">
             <h1 class="center">All Games</h1>
             <p class="school-note">Use the search bar below to find a game. To filter for elementary & middle school compatible games, adjust the default game filter in Settings.</p>
@@ -600,7 +573,6 @@
             </div>
         </div>
 
-        <!-- ABOUT PAGE -->
         <div id="about" class="page">
             <div class="about-hero">
                 <h1>About Celestrium Online</h1>
@@ -704,11 +676,9 @@
             </div>
         </div>
 
-        <!-- SETTINGS PAGE -->
         <div id="settings" class="page">
             <h1 class="center">Settings</h1>
 
-            <!-- SITE AESTHETICS -->
             <h2 class="mb-10">Site Aesthetics</h2>
             <div class="setting-row">
                 <span>Dark Mode</span>
@@ -725,7 +695,6 @@
                 </label>
             </div>
 
-            <!-- GAME ORGANIZATION -->
             <h2 class="mb-10">Game Organization</h2>
             <div class="setting-row">
                 <span>Default Game Filter</span>
@@ -735,7 +704,6 @@
                 </select>
             </div>
 
-            <!-- PRIVACY TOOLS -->
             <h2 class="mb-10">Privacy Tools</h2>
             <div class="setting-row">
                 <span>Escape Keybind</span>
@@ -768,7 +736,6 @@
                 </div>
             </div>
 
-            <!-- ADVANCED -->
             <h2 class="mb-10">Advanced</h2>
             <div class="setting-row">
                 <button id="resetButton">Reset to Default</button>
@@ -781,7 +748,6 @@
             (function() {
                 'use strict';
 
-                // Helpers
                 const $ = sel => document.querySelector(sel);
                 const $$ = sel => Array.from(document.querySelectorAll(sel));
 
@@ -813,32 +779,26 @@
                 const uploadFaviconBtn = $('#uploadFaviconBtn');
                 const faviconFileName = $('#faviconFileName');
 
-                // Small utilities
                 const debounce = (fn, wait=120) => {
                     let t;
                     return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
                 };
 
-                // Update version display
                 const appVersion = document.querySelector('meta[name="app-version"]')?.content;
                 if (versionDisplay && appVersion) versionDisplay.textContent = appVersion;
 
-                // Favicon original
                 const faviconLinkEl = document.querySelector('link[rel~="icon"]');
                 const ORIGINAL_FAV_HREF = faviconLinkEl ? faviconLinkEl.getAttribute('href') : null;
                 let pendingFaviconDataUrl = null;
                 let faviconUrlValid = false;
                 let lastValidatedUrl = null;
 
-                // Keybinds
                 let escapeKeybind = null;
                 let tempKeybind = null;
                 let settingKeybind = false;
                 let pendingCloakTitle = null;
 
-                // NAVIGATION: expose showPage globally (other scripts depend on it)
                 window.showPage = function(id) {
-                    // Hide iframe and pages
                     iframeWrapper.style.display = 'none';
                     gameIframe.src = '';
                     $$('.page').forEach(p => p.classList.remove('active'));
@@ -846,7 +806,6 @@
                     if (page) page.classList.add('active');
                 };
 
-                // Wire navigation clicks (delegation)
                 navLinks.addEventListener('click', e => {
                     const a = e.target.closest && e.target.closest('a[data-page]');
                     if (!a) return;
@@ -857,14 +816,12 @@
 
                 logoBtn.addEventListener('click', () => window.showPage('home'));
 
-                // DARK MODE
                 darkToggle.checked = document.body.classList.contains('dark');
                 darkToggle.addEventListener('change', e => {
                     document.body.classList.toggle('dark', e.target.checked);
                     logo.src = e.target.checked ? './logo-dark.png?login.live.com' : './logo-light.png?login.live.com';
                 });
 
-                // ANIMATIONS
                 const updateAnimations = () => {
                     const enable = animationsToggle.checked;
                     $$('#home .card').forEach(el => el.classList.toggle('hoverable', enable));
@@ -873,12 +830,10 @@
                 animationsToggle.addEventListener('change', updateAnimations);
                 updateAnimations();
 
-                // Popular / grade counts
                 mostPopularGamesHeader.textContent = Math.floor(games.length/5)*5 + '+ of the Most Popular Games';
                 const elmWorkingGames = games.filter(g => g.grade === 'all-grades').length;
                 elementaryWorkingGamesHeader.textContent = `${elmWorkingGames}/${games.length} of Our Games Are Elementary & Middle School Compatible`;
 
-                // RENDER GAMES (uses DocumentFragment for better performance)
                 function createGameItem(g) {
                     const a = document.createElement('a');
                     a.className = 'game-item hoverable';
@@ -913,7 +868,6 @@
                     updateAnimations();
                 }
 
-                // Event delegation for game clicks
                 listEl.addEventListener('click', e => {
                     const a = e.target.closest && e.target.closest('.game-item');
                     if (!a) return;
@@ -925,7 +879,6 @@
                 defaultFilter.addEventListener('change', renderGames);
                 renderGames();
 
-                // RESET
                 $('#resetButton').addEventListener('click', () => {
                     darkToggle.checked = false; document.body.classList.remove('dark');
                     animationsToggle.checked = true; updateAnimations();
@@ -936,7 +889,6 @@
                     if (ORIGINAL_FAV_HREF) setFavicon(ORIGINAL_FAV_HREF);
                 });
 
-                // KEYBIND HANDLING
                 keybindInput.addEventListener('focus', () => { settingKeybind = true; tempKeybind = null; keybindInput.value = ''; });
 
                 function formatKey(e) {
@@ -974,7 +926,6 @@
                     }
                 });
 
-                // TAB CLOAK
                 if (cloakInput) {
                     cloakInput.value = '';
                     cloakInput.addEventListener('input', e => { pendingCloakTitle = e.target.value.trim() || null; });
@@ -991,7 +942,6 @@
 
                 if (resetCloakBtn) resetCloakBtn.addEventListener('click', () => { if (cloakInput) cloakInput.value = ''; pendingCloakTitle = null; document.title = ORIGINAL_TITLE; alert('Tab cloak reset to default.'); });
 
-                // FAVICON HELPERS
                 function setFavicon(href) {
                     try {
                         let el = document.querySelector('link[rel~="icon"]');
@@ -1047,7 +997,6 @@
             })();
         </script>
 
-        <!-- Auto-reload on navbar click if new version detected -->
         <script>
             (function() {
                 let currentVersion = document.querySelector('meta[name="app-version"]')?.content;
@@ -1070,13 +1019,10 @@
                     }
                 };
                 
-                // Check immediately on load
                 checkForUpdates();
                 
-                // Check for updates every minute
                 setInterval(checkForUpdates, 60 * 1000);
                 
-                // Wrap the original showPage function to reload if update available
                 const originalShowPage = window.showPage;
                 window.showPage = function(id) {
                     if (updateAvailable) {
