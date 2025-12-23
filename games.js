@@ -17,7 +17,6 @@ const games = [
     {name:"Bob The Robber 5", url:"bob-the-robber-5", grade:"all-grades"},
     {name:"Brawl Stars", url:"brawl-stars", grade:"all-grades"},
     {name:"Cookie Clicker", url:"cookie-click/", grade:"all-grades"},
-    {name:"Crossy Road", url:"crossy-road/", grade:"all-grades"},
     {name:"Cut the Rope", url:"cut-the-rope/", grade:"high-school-only"},
     {name:"Dadish", url:"dadish/", grade:"high-school-only"},
     {name:"Doomz.io", url:"doomzio/", grade:"all-grades"},
