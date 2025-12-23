@@ -298,7 +298,10 @@
             }
             .editors-wrapper h2 { margin: 0 0 12px 0; font-size: 1.5rem; }
             .editor-carousel { flex:1; display:flex; align-items:center; gap:10px; min-width: 0; overflow: hidden; min-height: 180px; }
-            .carousel-track { display:flex; gap:12px; overflow-x:auto; scroll-behavior:smooth; -webkit-overflow-scrolling: touch; padding:12px; min-width: 0; }
+            .carousel-track { display:flex; gap:12px; overflow: hidden; scroll-behavior:smooth; -webkit-overflow-scrolling: touch; padding:12px; min-width: 0; }
+
+            .marquee { display:block; width:100%; overflow:hidden; position:relative; }
+            .marquee-inner { display:flex; gap:12px; align-items:center; will-change: transform; }
 
             /* Hide scrollbars but keep scrolling functional */
             .carousel-track { scrollbar-width: none; /* Firefox */ -ms-overflow-style: none; /* IE 10+ */ }
@@ -859,7 +862,9 @@
                 function renderEditorsPicks() {
                     if (!editorsCarouselTrack) return;
                     editorsCarouselTrack.innerHTML = '';
-                    _singleSetWidth = 0;
+                    // Primary implementation: transform-based marquee
+                    _marqueeInner = null; _marqueeSetWidth = 0; _marqueeOffset = 0;
+
                     if (!editorsPicks || editorsPicks.length === 0) {
                         const fallback = document.createElement('div');
                         fallback.className = 'carousel-empty';
@@ -868,62 +873,31 @@
                         return;
                     }
 
-                    const originalNodes = [];
+                    const items = [];
                     editorsPicks.forEach((item) => {
                         const g = findGameByName(item.name);
                         const btn = document.createElement('button');
                         btn.className = 'carousel-item hoverable';
-                        btn.setAttribute('role','listitem');
+                        btn.setAttribute('role', 'listitem');
                         btn.dataset.url = g ? (g.url + '?login.live.com') : '';
-                        btn.innerHTML = `\n                            <img src="${item.favicon || ''}" alt="${item.name} icon" onerror="this.style.visibility='hidden'">\n                            <div class="carousel-title">${item.name}</div>`;
-                        editorsCarouselTrack.appendChild(btn);
-                        originalNodes.push(btn);
+                        btn.innerHTML = `<img src="${item.favicon || ''}" alt="${item.name} icon" onerror="this.style.visibility='hidden'"><div class="carousel-title">${item.name}</div>`;
+                        items.push(btn);
                     });
 
-                    // Measure and ensure overflow in a rAF (layout must settle first)
-                    requestAnimationFrame(() => {
-                        const first = originalNodes[0];
-                        const last = originalNodes[originalNodes.length - 1];
-                        if (first && last) {
-                            _singleSetWidth = (last.offsetLeft + last.offsetWidth) - first.offsetLeft;
-                        } else {
-                            _singleSetWidth = editorsCarouselTrack.scrollWidth;
-                        }
+                    // Build marquee structure (two sets for seamless loop)
+                    const marqueeRoot = document.createElement('div'); marqueeRoot.className = 'marquee';
+                    const inner = document.createElement('div'); inner.className = 'marquee-inner';
+                    const setA = document.createElement('div'); setA.style.display = 'inline-flex'; setA.style.gap = '12px';
+                    const setB = document.createElement('div'); setB.style.display = 'inline-flex'; setB.style.gap = '12px';
+                    items.forEach(i => setA.appendChild(i.cloneNode(true)));
+                    items.forEach(i => setB.appendChild(i.cloneNode(true)));
+                    inner.appendChild(setA); inner.appendChild(setB);
+                    marqueeRoot.appendChild(inner);
+                    editorsCarouselTrack.appendChild(marqueeRoot);
 
-                        // Ensure we have overflow by cloning sets until overflow or maxCopies reached
-                        const maxCopies = 10;
-                        let copies = 0;
-                        while (editorsCarouselTrack.scrollWidth <= editorsCarouselTrack.clientWidth && copies < maxCopies) {
-                            originalNodes.forEach(orig => editorsCarouselTrack.appendChild(orig.cloneNode(true)));
-                            copies++;
-                        }
+                    _marqueeInner = inner;
 
-                        // If still no overflow after duplicating, slightly reduce item min-width to help create overflow
-                        if (editorsCarouselTrack.scrollWidth <= editorsCarouselTrack.clientWidth) {
-                            document.querySelectorAll('.carousel-item').forEach(it => { it.style.minWidth = '120px'; });
-                            const totalSets = (copies + 1) || 1;
-                            _singleSetWidth = Math.floor(editorsCarouselTrack.scrollWidth / totalSets);
-                        } else {
-                            // recompute since appending clones may affect layout
-                            const lastOrig = originalNodes[originalNodes.length - 1];
-                            _singleSetWidth = (lastOrig.offsetLeft + lastOrig.offsetWidth) - originalNodes[0].offsetLeft;
-                        }
-
-                        // Guarantee at least one duplicate exists (so that wrap can occur)
-                        if (editorsCarouselTrack.children.length === originalNodes.length) {
-                            originalNodes.forEach(orig => editorsCarouselTrack.appendChild(orig.cloneNode(true)));
-                        }
-
-                        // Kick-start with a tiny offset so motion is visible
-                        if (editorsCarouselTrack.scrollLeft === 0) editorsCarouselTrack.scrollLeft = 1;
-
-                        // Disable smooth behavior while auto-scrolling to avoid conflicts
-                        editorsCarouselTrack.style.scrollBehavior = 'auto';
-
-                        startAutoScroll();
-                    });
-
-                    // Use event delegation so cloned nodes work without reattaching listeners
+                    // Delegated click handler (works for cloned nodes)
                     if (!editorsCarouselTrack._clickHandlerAdded) {
                         editorsCarouselTrack.addEventListener('click', (e) => {
                             const btn = e.target.closest && e.target.closest('.carousel-item');
@@ -933,6 +907,23 @@
                         });
                         editorsCarouselTrack._clickHandlerAdded = true;
                     }
+
+                    // Measure and start
+                    requestAnimationFrame(() => {
+                        _marqueeSetWidth = setA.offsetWidth || Math.floor(inner.scrollWidth / 2);
+
+                        // If content is too narrow to naturally scroll, make items slightly wider
+                        if (_marqueeSetWidth <= editorsCarouselTrack.clientWidth) {
+                            document.querySelectorAll('.carousel-item').forEach(it => { it.style.minWidth = '180px'; });
+                            _marqueeSetWidth = setA.offsetWidth || Math.floor(inner.scrollWidth / 2);
+                        }
+
+                        // Reset transform and start animation if allowed
+                        _marqueeOffset = 0; _marqueeLastTs = null;
+                        inner.style.transform = 'translateX(0)';
+                        if (!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) && animationsToggle.checked) startMarquee();
+                        updateDebug('transform init');
+                    });
                 }
 
                 if (playRandomBtn) playRandomBtn.addEventListener('click', () => {
@@ -944,204 +935,77 @@
                     else alert('No games available to play.');
                 });
 
-                const AUTO_SCROLL_PX_PER_SEC = 25;
-                let _autoScrollId = null;
-                let _lastTs = null;
-                let _autoPaused = false;
-                let _pointerInteraction = false;
-                let _resumeTimeout = null;
-                let _singleSetWidth = 0;
 
-                // Debug & fallback helpers
+                // Marquee implementation (primary, JS-driven transform)
+                const AUTO_SCROLL_PX_PER_SEC = 28;
+                let _marqueeRaf = null;
+                let _marqueeLastTs = null;
+                let _marqueeOffset = 0;
+                let _marqueeSetWidth = 0;
+                let _marqueeInner = null; // set by renderEditorsPicks
+                let _marqueePaused = false;
+                let _resumeTimeout = null;
+
                 const carouselDebugEl = document.getElementById('carouselDebug');
                 let _lastDebugUpdate = 0;
-
                 function updateDebug(msg, force) {
                     const now = performance.now();
-                    if (!force && (now - _lastDebugUpdate) < 250) return; // throttle DOM updates
+                    if (!force && (now - _lastDebugUpdate) < 160) return; // throttle DOM updates
                     _lastDebugUpdate = now;
                     try { if (carouselDebugEl) carouselDebugEl.textContent = 'Auto-scroll: ' + msg; } catch (e) {}
                 }
 
-                // Transform-based marquee fallback (JS-driven, uses RAF)
-                let _useTransformMarquee = false;
-                let _marqueeRoot = null;
-                let _marqueeInner = null;
-                let _transformOffset = 0;
-                let _transformLastTs = null;
-                let _transformRafId = null;
-                let _transformInnerWidth = 0;
+                function marqueeStep(ts) {
+                    if (_marqueePaused || !_marqueeInner) { _marqueeLastTs = ts; _marqueeRaf = requestAnimationFrame(marqueeStep); return; }
+                    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { stopMarquee(); return; }
+                    if (!animationsToggle.checked) { stopMarquee(); return; }
 
-                function transformMarqueeStep(ts) {
-                    if (!_useTransformMarquee || !_marqueeInner) { _transformLastTs = null; return; }
-                    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { _transformLastTs = null; return; }
-                    if (!animationsToggle.checked) { _transformLastTs = null; return; }
-
-                    if (_autoPaused || _pointerInteraction) { _transformLastTs = ts; _transformRafId = requestAnimationFrame(transformMarqueeStep); return; }
-                    if (_transformLastTs == null) _transformLastTs = ts;
-                    const dt = ts - _transformLastTs;
-                    _transformLastTs = ts;
+                    if (_marqueeLastTs == null) _marqueeLastTs = ts;
+                    const dt = ts - _marqueeLastTs;
+                    _marqueeLastTs = ts;
                     const delta = (AUTO_SCROLL_PX_PER_SEC * dt) / 1000;
-                    _transformOffset += delta;
-                    if (_transformInnerWidth > 0 && _transformOffset >= _transformInnerWidth) {
-                        _transformOffset -= _transformInnerWidth;
-                        try { console.debug('Editor carousel (transform): wrapped', { innerWidth: _transformInnerWidth }); } catch (e) {}
+                    _marqueeOffset += delta;
+                    if (_marqueeSetWidth > 0 && _marqueeOffset >= _marqueeSetWidth) {
+                        _marqueeOffset -= _marqueeSetWidth;
+                        try { console.debug('Editor carousel: transform wrap', { setWidth: _marqueeSetWidth }); } catch (e) {}
                     }
-                    // Apply transform (negative to move left)
-                    _marqueeInner.style.transform = 'translateX(' + (-_transformOffset) + 'px)';
-
-                    // Throttled debug update
-                    updateDebug('fallback (transform) · ' + Math.round(_transformOffset) + 'px');
-
-                    _transformRafId = requestAnimationFrame(transformMarqueeStep);
+                    _marqueeInner.style.transform = 'translateX(' + (-_marqueeOffset) + 'px)';
+                    updateDebug('transform · ' + Math.round(_marqueeOffset));
+                    _marqueeRaf = requestAnimationFrame(marqueeStep);
                 }
 
-                function enableTransformMarquee() {
-                    if (_useTransformMarquee || !editorsCarouselTrack) return;
-                    _useTransformMarquee = true;
-                    updateDebug('fallback (transform)', true);
-
-                    // Build marqueeRoot and inner container
-                    _marqueeRoot = document.createElement('div');
-                    _marqueeRoot.className = 'marquee';
-                    _marqueeInner = document.createElement('div');
-                    _marqueeInner.className = 'marquee-inner';
-
-                    // Move existing items into inner once and duplicate for seamless loop
-                    const items = Array.from(editorsCarouselTrack.children).filter(n => n.classList && n.classList.contains && n.classList.contains('carousel-item'));
-                    if (!items.length) return;
-                    // Create two sets
-                    const setA = document.createElement('div'); setA.style.display = 'inline-flex'; setA.style.gap = '12px';
-                    const setB = document.createElement('div'); setB.style.display = 'inline-flex'; setB.style.gap = '12px';
-                    items.forEach(it => setA.appendChild(it.cloneNode(true)));
-                    items.forEach(it => setB.appendChild(it.cloneNode(true)));
-
-                    _marqueeInner.appendChild(setA);
-                    _marqueeInner.appendChild(setB);
-                    _marqueeRoot.appendChild(_marqueeInner);
-
-                    // Clear track and append marqueeRoot
-                    editorsCarouselTrack.innerHTML = '';
-                    editorsCarouselTrack.appendChild(_marqueeRoot);
-
-                    // Measure inner width (the width of a single set)
-                    requestAnimationFrame(() => {
-                        _transformInnerWidth = setA.offsetWidth || _marqueeInner.scrollWidth / 2;
-                        _transformOffset = 0;
-                        _transformLastTs = null;
-                        if (_transformRafId) cancelAnimationFrame(_transformRafId);
-                        _transformRafId = requestAnimationFrame(transformMarqueeStep);
-                    });
+                function startMarquee() {
+                    if (_marqueeRaf) return;
+                    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { updateDebug('reduced-motion'); return; }
+                    if (!animationsToggle.checked) { updateDebug('animations off'); return; }
+                    if (!_marqueeInner || _marqueeSetWidth <= 0) return;
+                    _marqueePaused = false; _marqueeLastTs = null; _marqueeRaf = requestAnimationFrame(marqueeStep);
+                    updateDebug('transform running', true);
+                    try { console.info('Editor carousel: starting marquee', { setWidth: _marqueeSetWidth, clientWidth: editorsCarouselTrack.clientWidth }); } catch (e) {}
                 }
 
-                function disableTransformMarquee() {
-                    if (!_useTransformMarquee || !editorsCarouselTrack) return;
-                    _useTransformMarquee = false;
-                    // cancel RAF
-                    if (_transformRafId) { cancelAnimationFrame(_transformRafId); _transformRafId = null; }
-                    _transformLastTs = null; _transformOffset = 0; _transformInnerWidth = 0;
-                    // Rebuild canonical set into track (use existing DOM nodes if possible)
-                    const nodes = document.querySelectorAll('.carousel-item');
-                    editorsCarouselTrack.innerHTML = '';
-                    nodes.forEach(n => editorsCarouselTrack.appendChild(n.cloneNode(true)));
-                    updateDebug('js scrollLeft', true);
-                }
-
-                function probeAutoScroll() {
-                    if (!editorsCarouselTrack) return;
-                    // If no overflow, nothing to do
-                    if (editorsCarouselTrack.scrollWidth <= editorsCarouselTrack.clientWidth) { updateDebug('idle'); return; }
-                    // Short probe: measure scrollLeft change after small programmatic move
-                    try {
-                        const before = editorsCarouselTrack.scrollLeft;
-                        // nudge by 2px
-                        editorsCarouselTrack.scrollLeft += 2;
-                        setTimeout(() => {
-                            const after = editorsCarouselTrack.scrollLeft;
-                            // restore
-                            if (after !== before) editorsCarouselTrack.scrollLeft = before;
-                            if (Math.abs(after - before) < 1) {
-                                console.warn('Editor carousel: scrollLeft not producing visible movement; enabling transform fallback');
-                                enableTransformMarquee();
-                            } else {
-                                updateDebug('js scrollLeft', true);
-                            }
-                        }, 220);
-                    } catch (e) { enableTransformMarquee(); }
-                }
-
-                function autoScrollStep(ts) {
-                    if (_useTransformMarquee) { _autoScrollId = requestAnimationFrame(autoScrollStep); return; }
-                    if (!editorsCarouselTrack) return;
-                    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return stopAutoScroll();
-                    if (!animationsToggle.checked) return stopAutoScroll();
-
-                    // If there's no overflow, no need to autoscroll
-                    if (editorsCarouselTrack.scrollWidth <= editorsCarouselTrack.clientWidth) { stopAutoScroll(); return; }
-
-                    if (_autoPaused || _pointerInteraction) { _lastTs = ts; _autoScrollId = requestAnimationFrame(autoScrollStep); return; }
-                    if (_lastTs == null) _lastTs = ts;
-                    const dt = ts - _lastTs;
-                    _lastTs = ts;
-                    const dx = (AUTO_SCROLL_PX_PER_SEC * dt) / 1000;
-                    editorsCarouselTrack.scrollLeft += dx;
-
-                    // Seamless wrap
-                    if (_singleSetWidth > 0) {
-                        while (editorsCarouselTrack.scrollLeft >= _singleSetWidth) {
-                            editorsCarouselTrack.scrollLeft -= _singleSetWidth;
-                            try { console.debug('Editor carousel: wrapped by singleSetWidth', { singleSetWidth: _singleSetWidth }); } catch (e) {}
-                        }
-                    }
-
-                    // Throttled debug update
-                    updateDebug('js scrollLeft · ' + Math.round(editorsCarouselTrack.scrollLeft));
-
-                    _autoScrollId = requestAnimationFrame(autoScrollStep);
-                }
-
-                function startAutoScroll() {
-                    // If transform fallback already in-place, ensure it's running
-                    if (_useTransformMarquee && _marqueeRoot) { if (!_transformRafId) _transformRafId = requestAnimationFrame(transformMarqueeStep); return; }
-                    if (_autoScrollId) return;
-                    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-                    if (!animationsToggle.checked) return;
-                    if (editorsCarouselTrack && editorsCarouselTrack.scrollWidth <= editorsCarouselTrack.clientWidth) return; // nothing to scroll
-                    _autoPaused = false; _pointerInteraction = false; _lastTs = null;
-                    if (editorsCarouselTrack) editorsCarouselTrack.style.scrollBehavior = 'auto';
-                    if (editorsCarouselTrack && editorsCarouselTrack.scrollLeft === 0) editorsCarouselTrack.scrollLeft = 1;
-                    try { console.info('Editor carousel: starting auto-scroll', { singleSetWidth: _singleSetWidth, scrollWidth: editorsCarouselTrack.scrollWidth, clientWidth: editorsCarouselTrack.clientWidth }); } catch (e) {}
-                    _autoScrollId = requestAnimationFrame(autoScrollStep);
-
-                    // Probe whether scrollLeft produces visible movement; if not, fallback
-                    probeAutoScroll();
-                }
-
-                function stopAutoScroll() {
-                    if (_autoScrollId) { cancelAnimationFrame(_autoScrollId); _autoScrollId = null; }
-                    _lastTs = null;
-                    if (editorsCarouselTrack) editorsCarouselTrack.style.scrollBehavior = '';
-                    // If using transform fallback, stop its RAF as well
-                    if (_transformRafId) { cancelAnimationFrame(_transformRafId); _transformRafId = null; }
+                function stopMarquee() {
+                    if (_marqueeRaf) { cancelAnimationFrame(_marqueeRaf); _marqueeRaf = null; }
+                    _marqueeLastTs = null;
                     updateDebug('idle', true);
                 }
 
                 if (editorsCarouselTrack) {
-                    editorsCarouselTrack.addEventListener('mouseenter', () => { _autoPaused = true; });
-                    editorsCarouselTrack.addEventListener('mouseleave', () => { _autoPaused = false; });
-                    editorsCarouselTrack.addEventListener('focusin', () => { _autoPaused = true; });
-                    editorsCarouselTrack.addEventListener('focusout', () => { _autoPaused = false; });
+                    editorsCarouselTrack.addEventListener('mouseenter', () => { _marqueePaused = true; stopMarquee(); });
+                    editorsCarouselTrack.addEventListener('mouseleave', () => { _marqueePaused = false; if (animationsToggle.checked) startMarquee(); });
+                    editorsCarouselTrack.addEventListener('focusin', () => { _marqueePaused = true; stopMarquee(); });
+                    editorsCarouselTrack.addEventListener('focusout', () => { _marqueePaused = false; if (animationsToggle.checked) startMarquee(); });
 
                     editorsCarouselTrack.addEventListener('pointerdown', () => {
-                        _pointerInteraction = true; clearTimeout(_resumeTimeout); _resumeTimeout = setTimeout(() => { _pointerInteraction = false; }, 1500);
+                        _marqueePaused = true; clearTimeout(_resumeTimeout); _resumeTimeout = setTimeout(() => { _marqueePaused = false; if (animationsToggle.checked) startMarquee(); }, 1500);
                     });
                     editorsCarouselTrack.addEventListener('wheel', () => {
-                        _pointerInteraction = true; clearTimeout(_resumeTimeout); _resumeTimeout = setTimeout(() => { _pointerInteraction = false; }, 1500);
+                        _marqueePaused = true; clearTimeout(_resumeTimeout); _resumeTimeout = setTimeout(() => { _marqueePaused = false; if (animationsToggle.checked) startMarquee(); }, 1500);
                     }, { passive: true });
                 }
 
                 animationsToggle.addEventListener('change', () => {
-                    if (animationsToggle.checked) startAutoScroll(); else stopAutoScroll();
+                    if (animationsToggle.checked) startMarquee(); else stopMarquee();
                 });
 
                 renderEditorsPicks();
