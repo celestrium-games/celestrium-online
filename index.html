@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Celestrium Online Portal</title>
-        <meta name="app-version" content="3.10.8">
+        <meta name="app-version" content="3.9.9">
         <link rel="icon" type="image/x-icon" href="./favicon.ico?login.live.com">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -1173,100 +1173,40 @@
 
         <script>
             (function() {
-                // The version currently running in this tab (trim whitespace to be robust)
-                let currentVersion = (document.querySelector('meta[name="app-version"]')?.content || '').trim();
-
-                // Whether we've shown an update alert during the current focus cycle.
-                // After the first alert, we will not show any more until the tab loses and regains focus.
-                let alertShownThisFocusCycle = false;
-
-                // Whether the tab has blurred/hidden since the last focus cycle began.
-                let hadBlurSinceLastFocus = false;
-
-                // Remember the last detected newer version (so we can re-show it on focus regain)
-                let knownNewVersion = null;
-
-                const showUpdateAlert = (newVersion) => {
-                    try {
-                        alert('New version detected. Current Version is: ' + currentVersion + '. New Version is: ' + newVersion + ".\n\nThis website will be automatically reloaded if you switch to a different page.");
-                    } catch (e) {
-                        console.error('Failed to show update alert', e);
-                    }
-                };
-
+                let currentVersion = document.querySelector('meta[name="app-version"]')?.content;
+                let updateAvailable = false;
+                
                 const checkForUpdates = async () => {
                     try {
                         const response = await fetch(window.location.href, { cache: 'no-store' });
                         const html = await response.text();
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(html, 'text/html');
-                        const newVersionRaw = doc.querySelector('meta[name="app-version"]')?.content;
-                        const newVersion = (newVersionRaw || '').trim();
-
-                        if (!newVersion || newVersion === currentVersion) return;
-
-                        // Record the fact that there's a newer version
-                        knownNewVersion = newVersion;
-
-                        // If we've already shown an alert during this focus cycle, do nothing
-                        if (alertShownThisFocusCycle) return;
-
-                        // Otherwise show the alert once and block further alerts until focus is lost/regained
-                        alertShownThisFocusCycle = true;
-                        showUpdateAlert(newVersion);
+                        const newVersion = doc.querySelector('meta[name="app-version"]')?.content;
+                        
+                        if (newVersion && newVersion !== currentVersion) {
+                            updateAvailable = true;
+                            alert('New version detected. Current Version is: ' + currentVersion + '. New Version is: ' + newVersion + ".\n\nThis website will be automatically reloaded if you switch to a different page.");
+                        }
                     } catch (error) {
                         console.log('Version check failed (offline?)', error);
                     }
                 };
-
-                // When the tab loses focus or becomes hidden, mark that fact so we only reset the alert
-                // state after a real blur+focus cycle
-                window.addEventListener('blur', () => { hadBlurSinceLastFocus = true; });
-                document.addEventListener('visibilitychange', () => {
-                    if (document.visibilityState === 'hidden') hadBlurSinceLastFocus = true;
-                    else if (document.visibilityState === 'visible') {
-                        // If we actually lost focus since the last time we were visible, reset the shown flag
-                        if (hadBlurSinceLastFocus) {
-                            hadBlurSinceLastFocus = false;
-                            alertShownThisFocusCycle = false;
-
-                            // If we already know of a newer version, re-show its alert once immediately
-                            if (knownNewVersion && knownNewVersion !== currentVersion && !alertShownThisFocusCycle) {
-                                alertShownThisFocusCycle = true;
-                                showUpdateAlert(knownNewVersion);
-                            }
-                        }
-                    }
-                });
-
-                // Also handle focus event (some browsers fire focus instead of visibilitychange)
-                window.addEventListener('focus', () => {
-                    if (hadBlurSinceLastFocus) {
-                        hadBlurSinceLastFocus = false;
-                        alertShownThisFocusCycle = false;
-
-                        if (knownNewVersion && knownNewVersion !== currentVersion && !alertShownThisFocusCycle) {
-                            alertShownThisFocusCycle = true;
-                            showUpdateAlert(knownNewVersion);
-                        }
-                    }
-                });
-
-                // Initial check and regular polling
+                
                 checkForUpdates();
+                
                 setInterval(checkForUpdates, 60 * 1000);
-
-                // Override showPage to reload if an update is known
+                
                 const originalShowPage = window.showPage;
                 window.showPage = function(id) {
-                    if (knownNewVersion && knownNewVersion !== currentVersion) {
+                    if (updateAvailable) {
                         location.reload();
                     } else {
                         originalShowPage(id);
                     }
                 };
-
             })();
         </script>
+
     </body>
 </html>
