@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Celestrium Online Portal</title>
-        <meta name="app-version" content="3.7.22">
+        <meta name="app-version" content="3.8.1">
         <link rel="icon" type="image/x-icon" href="./favicon.ico?login.live.com">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -175,17 +175,22 @@
                 padding: 16px 20px;
                 margin: 10px 0;
                 border-radius: 12px;
-                background: #eaf2ff;
+                background: linear-gradient(90deg, rgba(74,144,226,0.08), transparent 40%);
+                background-color: rgba(0,0,0,0.02);
                 color: #1555a6;
                 font-size: 1.18rem;
                 text-decoration: none;
                 display: block;
-                transition: transform .18s, background .18s;
+                transition: transform .18s, background .18s, color .18s, box-shadow .18s;
+                box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+                border: 1px solid rgba(0,0,0,0.03);
+                
             }
 
             .game-item.hoverable:hover {
-                background: #d8e9ff;
+                background: linear-gradient(90deg, rgba(74,144,226,0.12), transparent 40%);
                 transform: translateX(4px);
+                box-shadow: 0 6px 18px rgba(74,144,226,0.08);
             }
 
             #no-results {
@@ -652,7 +657,6 @@
                     <h4>Changelog (Major Updates Only)</h4>
                     <ul class="about-features">
                             <li class="ml-20">v3.7 — Homepage Rework</li>
-                            <li class="ml-20">v3.6 — Source Code Refactor</li>
                             <li class="ml-20">v3.5 — Refactored About Page</li>
                             <li class="ml-20">v3.3 — Introduction of Privacy Settings to Settings</li>
                             <li class="ml-20">v3.0 — Major Asthetics Overhaul</li>
