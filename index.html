@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Celestrium Online Portal</title>
-        <meta name="app-version" content="3.10.1">
+        <meta name="app-version" content="3.10.2">
         <link rel="icon" type="image/x-icon" href="./favicon.ico?login.live.com">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -1200,10 +1200,17 @@
                     }
                 };
 
-                // Reset the alert lock when the page becomes visible or gains focus
-                window.addEventListener('focus', resetAlertLock);
+                // Only allow the update alert to be shown again after the tab truly lost and regained focus
+                // Track whether we've seen a blur/hidden event since the alert was last shown.
+                let hadBlurSinceAlert = false;
+
+                window.addEventListener('blur', () => { hadBlurSinceAlert = true; });
+                window.addEventListener('focus', () => {
+                    if (hadBlurSinceAlert) { hasShownUpdateAlert = false; hadBlurSinceAlert = false; }
+                });
                 document.addEventListener('visibilitychange', () => {
-                    if (document.visibilityState === 'visible') resetAlertLock();
+                    if (document.visibilityState === 'hidden') hadBlurSinceAlert = true;
+                    else if (document.visibilityState === 'visible' && hadBlurSinceAlert) { hasShownUpdateAlert = false; hadBlurSinceAlert = false; }
                 });
 
                 checkForUpdates();
