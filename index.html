@@ -1173,12 +1173,23 @@
 
         <script>
             (function() {
-                let currentVersion = document.querySelector('meta[name="app-version"]')?.content;
+                // The version currently running in this tab (trim whitespace to be robust)
+                let currentVersion = (document.querySelector('meta[name="app-version"]')?.content || '').trim();
+
+                // Track the version we alerted about most recently
+                let lastAlertedVersion = null;
+                // Whether the tab has blurred/hidden since that alert was shown
+                let hadBlurSinceLastAlert = false;
+                // Whether we have detected *any* newer version (for showPage reload behavior)
                 let updateAvailable = false;
 
-                // Track the specific version we've alerted about and whether we may re-show it after a blur
-                let alertedVersion = null;
-                let canShowAfterBlur = false;
+                const showUpdateAlert = (newVersion) => {
+                    try {
+                        alert('New version detected. Current Version is: ' + currentVersion + '. New Version is: ' + newVersion + ".\n\nThis website will be automatically reloaded if you switch to a different page.");
+                    } catch (e) {
+                        console.error('Failed to show update alert', e);
+                    }
+                };
 
                 const checkForUpdates = async () => {
                     try {
@@ -1186,33 +1197,52 @@
                         const html = await response.text();
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(html, 'text/html');
-                        const newVersion = doc.querySelector('meta[name="app-version"]')?.content;
+                        const newVersionRaw = doc.querySelector('meta[name="app-version"]')?.content;
+                        const newVersion = (newVersionRaw || '').trim();
 
                         if (newVersion && newVersion !== currentVersion) {
                             updateAvailable = true;
 
-                            // If we haven't alerted about this version yet, do so now.
-                            if (alertedVersion !== newVersion) {
-                                alertedVersion = newVersion;
-                                canShowAfterBlur = false;
-                                alert('New version detected. Current Version is: ' + currentVersion + '. New Version is: ' + newVersion + ".\n\nThis website will be automatically reloaded if you switch to a different page.");
-                            } else if (canShowAfterBlur) {
-                                // Only re-show if tab lost focus since the last alert for this version
-                                canShowAfterBlur = false;
-                                alert('New version detected. Current Version is: ' + currentVersion + '. New Version is: ' + newVersion + ".\n\nThis website will be automatically reloaded if you switch to a different page.");
-                            } else {
-                                // Already alerted for this version and no blur happened — do nothing
+                            // First time we see any newer version
+                            if (!lastAlertedVersion) {
+                                lastAlertedVersion = newVersion;
+                                hadBlurSinceLastAlert = false;
+                                showUpdateAlert(newVersion);
+                                return;
                             }
+
+                            // If it's the same version we already alerted about
+                            if (newVersion === lastAlertedVersion) {
+                                // Only re-show if the tab actually lost and regained focus since the last alert
+                                if (hadBlurSinceLastAlert) {
+                                    hadBlurSinceLastAlert = false;
+                                    showUpdateAlert(newVersion);
+                                }
+                                // otherwise do nothing
+                                return;
+                            }
+
+                            // If it's a different (newer) version we haven't alerted for yet
+                            lastAlertedVersion = newVersion;
+                            hadBlurSinceLastAlert = false;
+                            showUpdateAlert(newVersion);
                         }
                     } catch (error) {
                         console.log('Version check failed (offline?)', error);
                     }
                 };
 
-                // When the tab becomes hidden/blurred, allow the alert to be shown again for the same version
-                window.addEventListener('blur', () => { if (alertedVersion) canShowAfterBlur = true; });
+                // Mark that the tab lost focus/visibility since the last alert
+                window.addEventListener('blur', () => { if (lastAlertedVersion) hadBlurSinceLastAlert = true; });
                 document.addEventListener('visibilitychange', () => {
-                    if (document.visibilityState === 'hidden' && alertedVersion) canShowAfterBlur = true;
+                    if (document.visibilityState === 'hidden') { if (lastAlertedVersion) hadBlurSinceLastAlert = true; }
+                    else if (document.visibilityState === 'visible') {
+                        // When we regain visibility and we had blurred since the last alert, re-show the alert immediately
+                        if (hadBlurSinceLastAlert && lastAlertedVersion && lastAlertedVersion !== currentVersion) {
+                            hadBlurSinceLastAlert = false;
+                            showUpdateAlert(lastAlertedVersion);
+                        }
+                    }
                 });
 
                 checkForUpdates();
