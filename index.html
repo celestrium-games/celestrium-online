@@ -1176,12 +1176,15 @@
                 // The version currently running in this tab (trim whitespace to be robust)
                 let currentVersion = (document.querySelector('meta[name="app-version"]')?.content || '').trim();
 
-                // Track the version we alerted about most recently
-                let lastAlertedVersion = null;
-                // Whether the tab has blurred/hidden since that alert was shown
-                let hadBlurSinceLastAlert = false;
-                // Whether we have detected *any* newer version (for showPage reload behavior)
-                let updateAvailable = false;
+                // Whether we've shown an update alert during the current focus cycle.
+                // After the first alert, we will not show any more until the tab loses and regains focus.
+                let alertShownThisFocusCycle = false;
+
+                // Whether the tab has blurred/hidden since the last focus cycle began.
+                let hadBlurSinceLastFocus = false;
+
+                // Remember the last detected newer version (so we can re-show it on focus regain)
+                let knownNewVersion = null;
 
                 const showUpdateAlert = (newVersion) => {
                     try {
@@ -1200,54 +1203,60 @@
                         const newVersionRaw = doc.querySelector('meta[name="app-version"]')?.content;
                         const newVersion = (newVersionRaw || '').trim();
 
-                        if (newVersion && newVersion !== currentVersion) {
-                            updateAvailable = true;
+                        if (!newVersion || newVersion === currentVersion) return;
 
-                            // First time we see any newer version
-                            if (!lastAlertedVersion) {
-                                lastAlertedVersion = newVersion;
-                                hadBlurSinceLastAlert = false;
-                                showUpdateAlert(newVersion);
-                                return;
-                            }
+                        // Record the fact that there's a newer version
+                        knownNewVersion = newVersion;
 
-                            // If it's the same version we already alerted about
-                            if (newVersion === lastAlertedVersion) {
-                                // Only re-show if the tab actually lost and regained focus since the last alert
-                                if (hadBlurSinceLastAlert) {
-                                    hadBlurSinceLastAlert = false;
-                                    showUpdateAlert(newVersion);
-                                }
-                                // otherwise do nothing
-                                return;
-                            }
+                        // If we've already shown an alert during this focus cycle, do nothing
+                        if (alertShownThisFocusCycle) return;
 
-                            // If it's a different (newer) version we haven't alerted for yet
-                            lastAlertedVersion = newVersion;
-                            hadBlurSinceLastAlert = false;
-                            showUpdateAlert(newVersion);
-                        }
+                        // Otherwise show the alert once and block further alerts until focus is lost/regained
+                        alertShownThisFocusCycle = true;
+                        showUpdateAlert(newVersion);
                     } catch (error) {
                         console.log('Version check failed (offline?)', error);
                     }
                 };
 
-                // Mark that the tab lost focus/visibility since the last alert
-                window.addEventListener('blur', () => { if (lastAlertedVersion) hadBlurSinceLastAlert = true; });
+                // When the tab loses focus or becomes hidden, mark that fact so we only reset the alert
+                // state after a real blur+focus cycle
+                window.addEventListener('blur', () => { hadBlurSinceLastFocus = true; });
                 document.addEventListener('visibilitychange', () => {
-                    if (document.visibilityState === 'hidden') { if (lastAlertedVersion) hadBlurSinceLastAlert = true; }
+                    if (document.visibilityState === 'hidden') hadBlurSinceLastFocus = true;
                     else if (document.visibilityState === 'visible') {
-                        // When we regain visibility and we had blurred since the last alert, re-show the alert immediately
-                        if (hadBlurSinceLastAlert && lastAlertedVersion && lastAlertedVersion !== currentVersion) {
-                            hadBlurSinceLastAlert = false;
-                            showUpdateAlert(lastAlertedVersion);
+                        // If we actually lost focus since the last time we were visible, reset the shown flag
+                        if (hadBlurSinceLastFocus) {
+                            hadBlurSinceLastFocus = false;
+                            alertShownThisFocusCycle = false;
+
+                            // If we already know of a newer version, re-show its alert once immediately
+                            if (knownNewVersion && knownNewVersion !== currentVersion && !alertShownThisFocusCycle) {
+                                alertShownThisFocusCycle = true;
+                                showUpdateAlert(knownNewVersion);
+                            }
                         }
                     }
                 });
 
-                checkForUpdates();
+                // Also handle focus event (some browsers fire focus instead of visibilitychange)
+                window.addEventListener('focus', () => {
+                    if (hadBlurSinceLastFocus) {
+                        hadBlurSinceLastFocus = false;
+                        alertShownThisFocusCycle = false;
 
+                        if (knownNewVersion && knownNewVersion !== currentVersion && !alertShownThisFocusCycle) {
+                            alertShownThisFocusCycle = true;
+                            showUpdateAlert(knownNewVersion);
+                        }
+                    }
+                });
+
+                // Initial check and regular polling
+                checkForUpdates();
                 setInterval(checkForUpdates, 60 * 1000);
+            })();
+        </script>
 
                 const originalShowPage = window.showPage;
                 window.showPage = function(id) {
