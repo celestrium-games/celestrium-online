@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Celestrium Online Portal</title>
-        <meta name="app-version" content="3.9.1">
+        <meta name="app-version" content="3.9.2">
         <link rel="icon" type="image/x-icon" href="./favicon.ico?login.live.com">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -1175,7 +1175,11 @@
             (function() {
                 let currentVersion = document.querySelector('meta[name="app-version"]')?.content;
                 let updateAvailable = false;
-                
+                // Only show the update alert once until the tab loses and regains focus
+                let hasShownUpdateAlert = false;
+
+                const resetAlertLock = () => { hasShownUpdateAlert = false; };
+
                 const checkForUpdates = async () => {
                     try {
                         const response = await fetch(window.location.href, { cache: 'no-store' });
@@ -1183,20 +1187,29 @@
                         const parser = new DOMParser();
                         const doc = parser.parseFromString(html, 'text/html');
                         const newVersion = doc.querySelector('meta[name="app-version"]')?.content;
-                        
+
                         if (newVersion && newVersion !== currentVersion) {
                             updateAvailable = true;
-                            alert('New version detected. Current Version is: ' + currentVersion + '. New Version is: ' + newVersion + ".\n\nThis website will be automatically reloaded if you switch to a different page.");
+                            if (!hasShownUpdateAlert) {
+                                hasShownUpdateAlert = true;
+                                alert('New version detected. Current Version is: ' + currentVersion + '. New Version is: ' + newVersion + ".\n\nThis website will be automatically reloaded if you switch to a different page.");
+                            }
                         }
                     } catch (error) {
                         console.log('Version check failed (offline?)', error);
                     }
                 };
-                
+
+                // Reset the alert lock when the page becomes visible or gains focus
+                window.addEventListener('focus', resetAlertLock);
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'visible') resetAlertLock();
+                });
+
                 checkForUpdates();
-                
+
                 setInterval(checkForUpdates, 60 * 1000);
-                
+
                 const originalShowPage = window.showPage;
                 window.showPage = function(id) {
                     if (updateAvailable) {
