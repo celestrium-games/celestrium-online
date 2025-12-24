@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Celestrium Online Portal</title>
-        <meta name="app-version" content="3.10.3">
+        <meta name="app-version" content="3.10.4">
         <link rel="icon" type="image/x-icon" href="./favicon.ico?login.live.com">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -1175,10 +1175,10 @@
             (function() {
                 let currentVersion = document.querySelector('meta[name="app-version"]')?.content;
                 let updateAvailable = false;
-                // Only show the update alert once until the tab loses and regains focus
-                let hasShownUpdateAlert = false;
 
-                const resetAlertLock = () => { hasShownUpdateAlert = false; };
+                // Track the specific version we've alerted about and whether we may re-show it after a blur
+                let alertedVersion = null;
+                let canShowAfterBlur = false;
 
                 const checkForUpdates = async () => {
                     try {
@@ -1190,9 +1190,18 @@
 
                         if (newVersion && newVersion !== currentVersion) {
                             updateAvailable = true;
-                            if (!hasShownUpdateAlert) {
-                                hasShownUpdateAlert = true;
+
+                            // If we haven't alerted about this version yet, do so now.
+                            if (alertedVersion !== newVersion) {
+                                alertedVersion = newVersion;
+                                canShowAfterBlur = false;
                                 alert('New version detected. Current Version is: ' + currentVersion + '. New Version is: ' + newVersion + ".\n\nThis website will be automatically reloaded if you switch to a different page.");
+                            } else if (canShowAfterBlur) {
+                                // Only re-show if tab lost focus since the last alert for this version
+                                canShowAfterBlur = false;
+                                alert('New version detected. Current Version is: ' + currentVersion + '. New Version is: ' + newVersion + ".\n\nThis website will be automatically reloaded if you switch to a different page.");
+                            } else {
+                                // Already alerted for this version and no blur happened — do nothing
                             }
                         }
                     } catch (error) {
@@ -1200,17 +1209,10 @@
                     }
                 };
 
-                // Only allow the update alert to be shown again after the tab truly lost and regained focus
-                // Track whether we've seen a blur/hidden event since the alert was last shown.
-                let hadBlurSinceAlert = false;
-
-                window.addEventListener('blur', () => { hadBlurSinceAlert = true; });
-                window.addEventListener('focus', () => {
-                    if (hadBlurSinceAlert) { hasShownUpdateAlert = false; hadBlurSinceAlert = false; }
-                });
+                // When the tab becomes hidden/blurred, allow the alert to be shown again for the same version
+                window.addEventListener('blur', () => { if (alertedVersion) canShowAfterBlur = true; });
                 document.addEventListener('visibilitychange', () => {
-                    if (document.visibilityState === 'hidden') hadBlurSinceAlert = true;
-                    else if (document.visibilityState === 'visible' && hadBlurSinceAlert) { hasShownUpdateAlert = false; hadBlurSinceAlert = false; }
+                    if (document.visibilityState === 'hidden' && alertedVersion) canShowAfterBlur = true;
                 });
 
                 checkForUpdates();
