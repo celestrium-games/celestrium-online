@@ -42,6 +42,8 @@ const games = [
     {name:"Learn to Fly 3", url:"learn-to-fly-3/"},
     {name:"Melon Playground", url:"melon-playground/"},
     {name:"Monkey Mart", url:"monkey-mart/"},
+    {name:"Moto X 3M II", url:"motox3m-2/"},
+    {name:"Moto X 3M III", url:"motox3m-3/"},
     {name:"Moto X 3M - Pool Party", url:"motox3m-poolparty/"},
     {name:"Moto X 3M - Spookyland", url:"motox3m-spookyland/"},
     {name:"Moto X 3M - Winterland", url:"motox3m-winterland/"},
@@ -75,6 +77,8 @@ const games = [
     {name:"Temple Run 2", url:"temple-run-2/"},
     {name:"Territorial.io", url:"territorialio/"},
     {name:"There is No Game", url:"there-is-no-game/"},
+    {name:"This is the Only Level", url:"this-is-the-only-level/"},
+    {name:"Time Shooter 2", url:"time-shooter-2/"},
     {name:"Time Shooter 3 S.W.A.T", url:"time-shooter-3-swat/"},
     {name:"Tiny Fishing", url:"tiny-fishing/"},
     {name:"Tomb of the Mask", url:"tomb-of-the-mask/"},
@@ -83,5 +87,6 @@ const games = [
     {name:"The Knights Battle Arena", url:"war-the-knights-battle-arena-swords/"},
     {name:"We Become What We Behold", url:"we-become-what-we-behold/"},
     {name:"Wheely 8", url:"wheely-8/"},
-    {name:"Wordle+", url:"wordle+/" }
+    {name:"Wordle+", url:"wordle+/" },
+    {name:"World's Hardest Game 3", url:"worlds-hardest-game-3/" }
 ];
