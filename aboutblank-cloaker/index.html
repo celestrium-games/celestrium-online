@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>About:Blank Cloaker</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f7fa, #ffffff);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            color: #2c3e50;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        label {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            display: block;
+            color: #34495e;
+            text-align: left;
+            user-select: none;
+        }
+        code {
+            background-color: #d0f0fd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            font-weight: 600;
+            color: #0277bd;
+        }
+        strong {
+            color: #e67e22;
+        }
+        em {
+            color: #7f8c8d;
+            font-style: normal;
+            font-weight: 600;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1.8px solid #b0bec5;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            outline-offset: 2px;
+            outline-color: transparent;
+            box-sizing: border-box;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+        input[type="text"]::placeholder {
+            color: #90a4ae;
+            font-style: italic;
+        }
+        input[type="text"]:focus {
+            border-color: #0288d1;
+            box-shadow: 0 0 8px rgba(2, 136, 209, 0.4);
+            outline-color: #0288d1;
+        }
+        .submit-button {
+            background-color: #0288d1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 28px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(2, 136, 209, 0.4);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            user-select: none;
+        }
+        .submit-button:hover,
+        .submit-button:focus {
+            background-color: #015f8b;
+            box-shadow: 0 8px 20px rgba(1, 95, 139, 0.6);
+            outline: none;
+        }
+        .submit-button:active {
+            background-color: #014a6b;
+            box-shadow: 0 4px 10px rgba(1, 74, 107, 0.7);
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 25px;
+            }
+            input[type="text"] {
+                font-size: 14px;
+                padding: 12px 14px;
+            }
+            .submit-button {
+                font-size: 16px;
+                padding: 12px 20px;
+            }
+            label {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+      <h1 style="user-select: none;">About:Blank Cloaker</h1>
+        <label for="search-bar-input">
+            Enter a search query or URL to open it in a new <code>about:blank</code> tab.<br><br>
+            • Your actions here will <strong>not</strong> be saved in your search history.<br>
+            • Clicking links will keep them opening in the same <code>about:blank</code> tab.<br><br>
+            <em>Note:</em> This is <strong>not</strong> a proxy.<br>
+            • Searches that are normally blocked will be unblocked.<br>
+            • However, links from those searches or URLs that are blocked by your network will remain blocked.<br>
+            • Sites that do not allow iframes will not work.
+        </label>
+        <input id="search-bar-input" type="text" placeholder="Search Query or URL Goes Here" aria-label="Search or URL input" autocomplete="off" />
+        <button id="submit" class="submit-button" onclick="openAboutBlank()">Open page in about:blank</button>
+    </div>
+    <script>
+        function googleSearchURL(search) {
+            search = search.trim();
+            search = search.split(/\s+/);
+            for (let i = 0; i < search.length; i++) {
+                search[i] = encodeURIComponent(search[i]);
+            }
+            var searchURL = "https://www.google.com/search?q=";
+            searchURL += search.join("+");
+            searchURL += "&igu=1#login.live.com";
+            return searchURL;
+        }
+        function isURLWithProtocol(string) {
+            try {
+                new URL(string);
+                return true;
+            }
+            catch {
+                return false;
+            }
+        }
+        function getURL(searchBarInput) {
+            var isURL = true;
+            if (isURLWithProtocol(searchBarInput)) {
+                var url = new URL(searchBarInput);
+                if (url.protocol !== "http:" && url.protocol !== "https:") {
+                    isURL = false;
+                }
+            } else {
+                isURL = false;
+            }
+            if (isURL) {
+                if (url.protocol === "http:") {
+                    try {
+                        var url = new URL(searchBarInput.replace("http", "https"));
+                    } catch {}
+                }
+                url = url.toString();
+            } else {
+                var url = googleSearchURL(searchBarInput);
+            }
+            return url + window.atob("I2xvZ2luLmxpdmUuY29t");
+        }
+        function openAboutBlank() {
+            let searchBarInput = document.getElementById("search-bar-input").value;
+            let url = getURL(searchBarInput);
+            let win = window.open();
+            win.document.body.style.margin = "0";
+            win.document.body.style.height = "100%";
+            let iframe = win.document.createElement("iframe");
+            iframe.style.border = "none";
+            iframe.style.width = "100%";
+            iframe.style.height = "100%";
+            iframe.style.margin = "0";
+            iframe.src = url;
+            win.document.body.appendChild(iframe);
+        }
+        let searchBarInput = document.getElementById("search-bar-input");
+        searchBarInput.addEventListener("keypress", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                searchBarInput.blur();
+                openAboutBlank();
+            }
+        });
+    </script>
+</body>
+</html>
