@@ -11,15 +11,26 @@ Games are organized into a searchable, curated library. Links open in a lightwei
 - **Fast Loading** — Optimized assets for quick navigation  
 - **Privacy Tools** — Tab cloak and escape keybind  
 - **Responsive Design** — Works on school Chromebooks, laptops, tablets, and phones  
-- **Customizable Settings** — Dark mode, animations toggle  
+- **Customizable Settings** — Dark mode, animations toggle
+
+## Changelog (Major Updates Only)
+
+- v4 — Major Architecture Refactor
+	- v4.0 — Major Architecture Refactor (Modular Pages)
+- v3 — Major UI Overhaul
+    - v3.7 — Homepage Rework
+    - v3.5 — Refactored About Page
+    - v3.3 — Introduction of Privacy Settings to Settings
+    - v3.0 — Major Aesthetics Overhaul
+- v2 — Major UI Overhaul
+    - v2.5 — Introduction of Settings
+    - v2.0 — Addition of 50+ Games
+- v1.0 — Initial Public Release
 
 ## Privacy & Safety
 We do **not** collect any personal data.
 
----
+## Authors
+This site is created and maintained by the Celestrium Online team. Special thanks to contributors who helped keep the experience lightweight and reliable.
 
-Created and maintained by the Celestrium Online team. Special thanks to contributors who helped keep the experience lightweight and reliable.
-
----
-
-[Easter Egg](https://celestrium-games.github.io/celestrium-online-portal/easter-egg.txt?login.live.com) Since You've Made it This Far
+Our Creator Made an [Easter Egg For You](https://celestrium-games.github.io/celestrium-online-portal/easter-egg.txt?login.live.com) Since You've Made it This Far

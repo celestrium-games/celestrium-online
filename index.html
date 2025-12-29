@@ -4,8 +4,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Celestrium Online Portal</title>
-        <meta name="app-version" content="3.14.1">
-        <link rel="icon" type="image/x-icon" href="./favicon.ico?login.live.com">
+        <meta name="app-version" content="4.0.13">
+        <link rel="icon" type="image/x-icon" href="./assets/favicons/favicon.ico?login.live.com">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
         <style>
@@ -31,10 +31,6 @@
                 background: var(--bg);
                 color: var(--text);
                 transition: background .25s, color .25s;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
             }
 
             nav {
@@ -57,15 +53,6 @@
             }
 
             .logo-img { height: 50px; display: inline-block; }
-            .center { text-align: center; }
-            .mb-10 { margin-bottom: 10px; }
-            .ml-20 { margin-left: 20px; }
-            .ml-8 { margin-left: 8px; }
-            .align-center { align-items: center; }
-            .hidden { display: none; }
-            .upload-btn { margin-left: 8px; padding: 8px 10px; }
-            .muted { font-size: 12px; color: var(--subtext); margin: 8px 0 0 0; }
-            .search-icon { color: var(--subtext); font-size: 1.2rem; }
 
             nav .links a {
                 margin-left: 20px;
@@ -80,448 +67,23 @@
                 color: var(--accent);
             }
 
-            .page {
-                display: none;
-                padding: 64px;
-                max-width: 1400px;
-                margin: auto;
-                animation: fade .3s ease;
-            }
-
-            .page.active { display: block; }
-
-            .ml-8 { margin-left: 8px; }
-
-            @keyframes fade {
-                from { opacity:0; transform:translateY(6px); }
-                to { opacity:1; transform:translateY(0); }
-            }
-
-            .hero {
-                text-align: center;
-                margin-top: 40px;
-            }
-
-            .hero h1 {
-                font-size: 4rem;
-                margin-bottom: 12px;
-                font-weight: 800;
-                letter-spacing: -0.02em;
-            }
-
-            .hero p {
-                color: var(--subtext);
-                font-size: 1.25rem;
-                max-width: 900px;
-                margin: 0 auto;
-            }
-
-            .card-grid {
-                margin-top: 50px;
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                gap: 25px;
-            }
-
-            .card {
-                background: var(--card);
-                padding: 28px;
-                border-radius: 14px;
-                text-align: center;
-                box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-                transition: transform .2s, box-shadow .2s;
-            }
-
-            .card.hoverable:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-            }
-
-            .search-bar {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin-bottom: 15px;
-                gap: 12px;
-                flex-wrap: wrap;
-            }
-
-            .search-bar input[type="text"] {
-                width: 60%;
-                padding: 14px;
-                border-radius: 10px;
-                border: 1px solid #ccc;
-                font-size: 1.1rem;
-                background: var(--card);
-                color: var(--text);
-                transition: background .25s, color .25s, border-color .25s;
-            }
-
-            .school-note {
-                color: var(--subtext);
-                text-align: center;
-                margin-bottom: 12px;
-                font-size: 0.95rem;
-            }
-
-            .games-container {
-                background: var(--card);
-                padding: 26px;
-                border-radius: 14px;
-                box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-            }
-
-            .game-item {
-                padding: 16px 20px;
-                margin: 10px 0;
-                border-radius: 12px;
-                background: linear-gradient(90deg, rgba(74,144,226,0.08), transparent 40%);
-                background-color: rgba(0,0,0,0.02);
-                color: #1555a6;
-                font-size: 1.18rem;
-                text-decoration: none;
-                display: block;
-                transition: transform .18s, background .18s, color .18s, box-shadow .18s;
-                box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-                border: 1px solid rgba(0,0,0,0.03);
-                
-            }
-
-            .game-item.hoverable:hover {
-                background: linear-gradient(90deg, rgba(74,144,226,0.12), transparent 40%);
-                transform: translateX(4px);
-                box-shadow: 0 6px 18px rgba(74,144,226,0.08);
-            }
-
-            #no-results {
-                padding: 50px 20px;
-                text-align: center;
-                color: var(--subtext);
-            }
-
-            #no-results img {
-                width: 250px;
-                height: 250px;
-                opacity: 0.5;
-                margin-bottom: 10px;
-            }
-
-            .about-card {
-                background: var(--card);
-                padding: 40px;
-                border-radius: 14px;
-                box-shadow: 0 10px 40px rgba(0,0,0,0.06);
-                transition: background .25s, color .25s, box-shadow .25s, transform .15s;
+            #pageIframe {
                 width: 100%;
-                overflow: hidden;
+                height: calc(100vh - 86px);
+                border: none;
+                display: block;
             }
 
-            .lead {
-                color: var(--subtext);
-                font-size: 1.12rem;
-                margin-top: 8px;
-                line-height: 1.6;
-            }
-
-            .about-grid {
-                display: grid;
-                grid-template-columns: 1fr 340px;
-                gap: 32px;
-                align-items: start;
-            }
-
-            .about-main h2.accent {
-                color: var(--accent);
-                margin: 6px 0 10px 0;
-            }
-
-            .about-main h3 {
-                margin: 18px 0 10px 0;
-            }
-
-            .about-features {
-                list-style: none;
-                padding: 0;
-                margin: 12px 0 0 0;
-                display: grid;
-                gap: 12px;
-            }
-
-            .about-features li {
-                background: linear-gradient(90deg, rgba(74,144,226,0.08), transparent 40%);
-                background-color: rgba(0,0,0,0.02);
-                padding: 12px 14px;
-                border-radius: 10px;
-                color: var(--text);
-                font-weight: 600;
-                line-height: 1.45;
-                transition: background .25s, color .25s;
-            }
-
-            body.dark .about-features li {
-                background: linear-gradient(90deg, rgba(94,168,255,0.04), transparent 40%);
-                background-color: rgba(255,255,255,0.02);
-            }
-
-            .about-side {
-                background: rgba(0,0,0,0.02);
-                padding: 18px;
-                border-radius: 12px;
-                font-size: 0.95rem;
-                color: var(--subtext);
-                line-height: 1.5;
-            }
-
-            .about-side h3 { color: var(--text); margin-top: 0; }
-
-            .about-cta { text-align: center; margin-top: 18px; }
-
-            hr.about-sep {
-                border: 0;
-                height: 1px;
-                background: linear-gradient(90deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02));
-                margin: 26px 0;
-            }
-
-            /* Editor's Picks carousel styles */
-            .home-features { margin-top: 28px; display: grid; grid-template-columns: 1fr; gap: 24px; align-items: stretch; justify-items: center; }
-            .home-features > .side-actions { display: flex; align-items: stretch; }
-            .side-actions { min-width: 0; }
-            /* Allow the left grid column to shrink instead of growing (prevents pushing the side card off-screen) */
-            .editors-wrapper { min-width: 0; background: var(--card); padding: 28px; border-radius: 12px; box-shadow: 0 8px 28px rgba(0,0,0,0.05); display:flex; flex-direction:column; min-height:220px; position:relative; width:100%; max-width:1400px; }
-            .editors-wrapper h2 { margin: 0 0 12px 0; font-size: 1.5rem; }
-            .editor-carousel { flex:1; display:flex; align-items:center; gap:10px; min-width: 0; overflow: hidden; min-height: 180px; }
-            .carousel-track { display:flex; gap:12px; overflow: hidden; scroll-behavior:smooth; -webkit-overflow-scrolling: touch; padding:12px; min-width: 0; }
-
-            .marquee { display:block; width:100%; overflow:hidden; position:relative; }
-            .marquee-inner { display:flex; gap:12px; align-items:center; will-change: transform; }
-
-            /* Hide scrollbars but keep scrolling functional */
-            .carousel-track { scrollbar-width: none; /* Firefox */ -ms-overflow-style: none; /* IE 10+ */ }
-            .carousel-track::-webkit-scrollbar { width: 0; height: 0; display: none; }
-
-            .carousel-item { display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:170px; max-width:220px; padding:16px; border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent); border:1px solid rgba(0,0,0,0.06); cursor:pointer; text-align:center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform .18s ease, box-shadow .18s ease; }
-            .carousel-item.hoverable:hover { transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-            .carousel-item img { width:72px; height:72px; object-fit:contain; margin-bottom:12px; border-radius:10px; background: rgba(255,255,255,0.02); padding:10px; }
-            .carousel-title { font-weight:800; font-size:1rem; color: var(--text); }
-
-            /* Play Random card (can be placed next to carousel) */
-            .play-random-card { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:28px; height:100%; min-height:220px; }
-            .play-random-btn { background: linear-gradient(90deg, var(--accent), #3a7bd5); color: white; border: none; padding: 14px 22px; border-radius: 12px; font-weight: 800; font-size: 1.06rem; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 8px 22px rgba(74,144,226,0.18); transition: transform .12s, box-shadow .12s, opacity .12s; width:100%; justify-content:center; }
-            .play-random-btn.hoverable:hover { transform: translateY(-4px); box-shadow: 0 14px 40px rgba(74,144,226,0.24); }
-            .play-random-btn i { font-size: 1.15rem; }
-
-            /* Responsive tweaks */
-            @media (max-width: 860px) {
-                .home-features { display: block; }
-                .editors-wrapper { margin-bottom: 12px; padding: 14px; }
-                .play-random-card { width: 100%; }
-            }
-
-            @media (min-width: 1400px) {
-                .carousel-item { min-width:220px; max-width:260px; padding:18px; }
-                .carousel-item img { width:84px; height:84px; }
-                .editor-carousel { gap:18px; }
-                #no-results img { width:250px; height:250px; }
-            }
-
-
-            @media (max-width: 860px) {
-                .home-features { grid-template-columns: 1fr; }
-                .editor-carousel { margin-bottom: 12px; }
-            }
-
-            .faq details { margin: 12px 0; }
-
-            .faq summary { cursor: pointer; font-weight: 700; padding: 8px 6px; }
-
-            .about-card p { margin-bottom: 14px; line-height: 1.7; }
-
-            .about-section { margin-top: 18px; }
-
-            @media (max-width: 860px) {
-                .about-grid { grid-template-columns: 1fr; }
-                .about-side { order: 2; }
-            }
-
-            .setting-row {
-                background: var(--card);
-                padding: 20px;
-                border-radius: 12px;
-                margin-bottom: 30px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                box-shadow: 0 1px 8px rgba(0,0,0,0.08);
-                transition: background .25s, color .25s, box-shadow .25s;
-            }
-
-            .setting-row label,
-            .setting-row select,
-            .setting-row button {
-                margin-left: 10px;
-            }
-
-
-
-            .switch {
-                position: relative;
-                display: inline-block;
-                width: 50px;
-                height: 26px;
-            }
-
-            .switch input {
-                opacity: 0;
-                width: 0;
-                height: 0;
-            }
-
-            .slider {
-                position: absolute;
-                cursor: pointer;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: #ccc;
-                transition: .4s;
-                border-radius: 26px;
-            }
-
-            .slider:before {
-                position: absolute;
-                content: "";
-                height: 22px;
-                width: 22px;
-                left: 2px;
-                bottom: 2px;
-                background: white;
-                transition: .4s;
-                border-radius: 50%;
-            }
-
-            input:checked + .slider {
-                background-color: var(--accent);
-            }
-
-            input:checked + .slider:before {
-                transform: translateX(24px);
-            }
-
-            body.dark .game-item {
-                background: #2a2c35;
-                color: #a3c9ff;
-            }
-
-            body.dark .game-item.hoverable:hover {
-                background: #3a3c46;
-            }
-
-            body.dark .search-bar input {
-                background: #2a2c35;
-                color: #e0e0e0;
-                border-color: #555;
-            }
-
-            body.dark .games-container {
-                background: #1f2128;
-                box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-            }
-
-            body.dark .setting-row {
-                background: #1f2128;
-                box-shadow: 0 1px 8px rgba(0,0,0,0.3);
+            #gameIframe {
+                width: 100%;
+                height: calc(100vh - 86px);
+                border: none;
+                display: none;
             }
 
             body.dark nav {
                 background: #1f2128;
                 box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-            }
-
-            body.dark .card {
-                background: #1f2128;
-                color: #e0e0e0;
-                box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-            }
-
-            body.dark .hero p {
-                color: var(--subtext);
-            }
-
-            #iframeWrapper {
-                display: none;
-                width: 100%;
-                height: calc(100vh - 70px);
-            }
-
-            #iframeWrapper iframe {
-                width: 100%;
-                height: 100%;
-                border: none;
-            }
-
-            .keybind-row {
-                display: flex;
-                gap: 10px;
-                align-items: center;
-                margin-top: 10px;
-            }
-
-            .keybind-row input {
-                padding: 10px 14px;
-                font-size: 1rem;
-                width: 240px;
-                border-radius: 8px;
-                border: 2px solid #ccc;
-                background: var(--card);
-                color: var(--text);
-                font-weight: 500;
-                transition: all 0.25s;
-                box-shadow: inset 0 1px 4px rgba(0,0,0,0.1);
-            }
-
-            .keybind-row input:focus {
-                border-color: var(--accent);
-                box-shadow: 0 0 5px rgba(74,144,226,0.4);
-            }
-
-            .keybind-row button {
-                padding: 8px 12px;
-                cursor: pointer;
-                border: none;
-                border-radius: 6px;
-                font-weight: 600;
-                transition: background .2s;
-            }
-
-            .keybind-row button:hover {
-                opacity: 0.85;
-            }
-
-            .save-btn {
-                background: var(--accent);
-                color: white;
-            }
-
-            .reset-btn {
-                background: #ccc;
-                color: #333;
-            }
-
-            #resetButton {
-                padding: 10px 18px;
-                border-radius: 8px;
-                border: none;
-                background: var(--accent);
-                color: white;
-                font-weight: 600;
-                cursor: pointer;
-                transition: background .2s;
-            }
-
-            #resetButton:hover {
-                background: #3a7bd5;
             }
         </style>
     </head>
@@ -529,539 +91,127 @@
     <body class="light">
         
         <nav role="navigation">
-            <div class="logo" id="logoBtn"><img id="logoImg" src="./logo-light.png?login.live.com" alt="Celestrium Online" class="logo-img"></div>
+            <div class="logo" id="logoBtn"><img id="logoImg" src="./assets/logos/logo-light.png?login.live.com" alt="Celestrium Online" class="logo-img"></div>
             <div class="links" id="navLinks">
                 <a href="#" data-page="home"><i class="fas fa-home"></i> Home</a>
-                <a href="#" data-page="all"><i class="fas fa-gamepad"></i> All Games</a>
+                <a href="#" data-page="all-games"><i class="fas fa-gamepad"></i> All Games</a>
+                <a href="#" data-page="all-utilities"><i class="fas fa-wrench"></i> All Utilities</a>
                 <a href="#" data-page="about"><i class="fas fa-info-circle"></i> About</a>
                 <a href="#" data-page="settings"><i class="fas fa-cog"></i> Settings</a>
             </div>
         </nav>
 
-        <div id="iframeWrapper">
-            <iframe id="gameIframe" src=""></iframe>
-        </div>
+        <iframe id="pageIframe" src="home.html"></iframe>
+        <iframe id="gameIframe" src=""></iframe>
 
-        <div id="home" class="page active">
-            <div class="hero">
-                <h1>Welcome to Celestrium Online</h1>
-                <p class="lead">A Fast, Curated Portal for Playing HTML Games — Built to Be Simple, Safe, & Enjoyable</p>
-            </div>
-
-            <div class="home-features">
-                <div class="editors-wrapper">
-                    <h2>Editor’s Picks</h2>
-                    <div style="display:flex; gap:16px; align-items:center;">
-                        <div class="editor-carousel" id="editorsCarousel" aria-roledescription="carousel" style="flex:1;">
-                            <div class="carousel-track" id="carouselTrack" role="list" tabindex="0" aria-label="Editor's Picks carousel"></div>
-                        </div>
-
-                        <div style="width:260px; min-width:180px;">
-                            <div class="card play-random-card">
-                                <button id="playRandomBtn" class="play-random-btn" aria-label="Play a random game"><i class="fas fa-dice"></i> Play Random</button>
-                                <p class="muted" style="margin:0; text-align:center;">Instantly Start a Random Editor's Pick — Try Something New!</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="muted">Curated by the Celestrium Online Team — Click a Game to Play</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="all" class="page">
-            <h1 class="center">All Games</h1>
-
-            <div class="search-bar">
-                <i class="fas fa-search search-icon" aria-hidden="true"></i>
-                <input id="search" type="text" placeholder="Search Games...">
-            </div>
-
-            <div class="games-container">
-                <div id="gameList"></div>
-                <div id="no-results" class="hidden">
-                    <img src="./invalid-search.png?login.live.com" alt="No Search Results">
-                    <p>No games match your query. Please check your spelling or adjust your search term.</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="about" class="page">
-
-            <div class="about-card">
-                <h1 class="center">About Celestrium Online</h1>
-                <div class="about-grid">
-                    <div class="about-main">
-                        <h2 class="accent">Our Mission</h2>
-                        <p>
-                            Celestrium Online exists to provide a clean, minimal, and dependable place to play browser games.
-                            We prioritize speed, usability, and a clutter-free experience so players can jump straight into
-                            gameplay without distractions.
-                        </p>
-
-                        <h3>How it Works</h3>
-                        <p>
-                            Games are organized into a searchable, curated library. Links open in a lightweight iframe to keep
-                            navigation immediate and fast. Settings let you tailor the site for school or personal use.
-                        </p>
-
-                        <h3>Highlights</h3>
-                        <ul class="about-features">
-                            <li>Curated Library — Hand-picked games that run well on most devices</li>
-                            <li>Fast Loading — Optimized assets for quick navigation</li>
-                            <li>Privacy Tools — Tab cloak and escape keybind</li>
-                            <li>Responsive Design — Works on school chromebooks, other laptops, tablets, and phones</li>
-                            <li>Customizable Settings — Dark mode & animations toggle</li>
-                        </ul>
-                    </div>
-
-                    <aside class="about-side">
-                        <h3>Credits</h3>
-                        <p>Created and maintained by the Celestrium Online team. Special thanks to contributors who helped keep the experience lightweight and reliable.</p>
-
-                        <h3>Privacy & Safety</h3>
-                        <p>
-                            We do not collect personal data by default. Built-in privacy tools (tab cloak, favicon controls)
-                            are session-only and do not persist to storage unless explicitly used via the Settings page.
-                        </p>
-                    </aside>
-                </div>
-
-                <hr class="about-sep">
-
-                <h3>More About the Project</h3>
-                <div class="ml-20">
-                <div class="about-section">
-                    <h4>History</h4>
-                    <p>
-                        Started as a weekend project, Celestrium Online gradually expanded as more games and features
-                        were added. The goal has remained consistent: keep the UI minimal and fast while offering useful
-                        tools to customize the browsing experience.
-                    </p>
-
-                    <h4>Values</h4>
-                    <p>
-                        Simplicity, performance, and respect for user privacy. We favor lightweight solutions and avoid
-                        intrusive ads or tracking in the core portal.
-                    </p>
-
-                    <h4>Contributing</h4>
-                    <p>
-                        If you'd like to suggest games or improvements, open an issue on the repository or contribute a
-                        pull request. We welcome constructive contributions that help improve accessibility and performance.
-                    </p>
-
-                    <h4>Changelog (Major Updates Only)</h4>
-                    <ul class="about-features">
-                            <li class="ml-20">v3.7 — Homepage Rework</li>
-                            <li class="ml-20">v3.5 — Refactored About Page</li>
-                            <li class="ml-20">v3.3 — Introduction of Privacy Settings to Settings</li>
-                            <li class="ml-20">v3.0 — Major Asthetics Overhaul</li>
-                        <li>v3 — Major UI Overhaul</li>
-                            <li class="ml-20">v2.5 — Introduction of Settings</li>
-                            <li class="ml-20">v2.0 — Addition of 50+ Games</li>
-                        <li>v2 — Major UI Overhaul</li>
-                        <li>v1.0 — Initial Public Release</li>
-                    </ul>
-                </div>
-            </div>
-
-                <hr class="about-sep">
-
-                <h3>FAQ</h3>
-                <div class="faq">
-                    <details>
-                        <summary>Is Celestrium Online free to use?</summary>
-                        <p class="ml-20">Yes, Celestrium Online is freely available and designed for quick access to games.</p>
-                    </details>
-                    <details>
-                        <summary>Will it work on school devices?</summary>
-                        <p class="ml-20">Celestrium Online is optimized for Chromebooks and typical school computers, but network restrictions may block some games.</p>
-                    </details>
-                    <details>
-                        <summary>How do I request a game or report an issue?</summary>
-                        <p class="ml-20">Open an <a href="https://github.com/celestrium-games/celestrium-online-portal/issues">issue on the project's repository</a> with details. Maintainers will review submissions.</p>
-                    </details>
-                </div>
-            </div>
-        </div>
-
-        <div id="settings" class="page">
-            <h1 class="center">Settings</h1>
-
-            <h2 class="mb-10">Site Aesthetics</h2>
-            <div class="setting-row">
-                <span>Dark Mode</span>
-                <label class="switch">
-                    <input type="checkbox" id="darkToggle">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="setting-row">
-                <span>Animations</span>
-                <label class="switch">
-                    <input type="checkbox" id="animationsToggle" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-
-            <h2 class="mb-10">Privacy Tools</h2>
-            <div class="setting-row">
-                <span>Escape Keybind</span>
-                <div class="keybind-row">
-                    <input type="text" id="keybindInput" placeholder="Press Key Combination" readonly>
-                    <button class="save-btn" id="saveKeybindBtn">Save</button>
-                    <button class="reset-btn" id="resetKeybindBtn">Reset</button>
-                </div>
-            </div>
-
-            <div class="setting-row">
-                <span>Tab Title</span>
-                <div class="keybind-row align-center">
-                    <input type="text" id="cloakInput" placeholder="Enter New Page Title">
-                    <button class="save-btn" id="saveCloakBtn">Save</button>
-                    <button class="reset-btn" id="resetCloakBtn">Reset</button>
-                </div>
-            </div>
-
-            <div class="setting-row">
-                <span>Favicon (Tab Icon)</span>
-                <div class="keybind-row align-center">
-                    <input type="text" id="faviconInput" placeholder="Enter Full Favicon URL">
-                    <input type="file" id="faviconFileInput" accept="image/*" class="hidden">
-                    <button class="save-btn upload-btn" id="uploadFaviconBtn">Upload</button>
-                    <span id="faviconFileName" class="ml-8 muted"></span>
-                    <button class="save-btn" id="saveFaviconBtn">Save</button>
-                    <button class="reset-btn" id="resetFaviconBtn">Reset</button>
-                    
-                </div>
-            </div>
-
-            <h2 class="mb-10">Advanced</h2>
-            <div class="setting-row">
-                <button id="resetButton">Reset All Settings to Default</button>
-                <p class="muted">Version <span id="versionDisplay">Unable to Fetch Version</span></p>
-            </div>
-        </div>
-
-        <script src="./games.js?login.live.com"></script>
         <script>
             (function() {
                 'use strict';
 
-                const $ = sel => document.querySelector(sel);
-                const $$ = sel => Array.from(document.querySelectorAll(sel));
+                const logo = document.getElementById('logoImg');
+                const logoBtn = document.getElementById('logoBtn');
+                const navLinks = document.getElementById('navLinks');
+                const pageIframe = document.getElementById('pageIframe');
+                const gameIframe = document.getElementById('gameIframe');
 
-                const logo = $('#logoImg');
-                const logoBtn = $('#logoBtn');
-                const navLinks = $('#navLinks');
-                const darkToggle = $('#darkToggle');
-                const listEl = $('#gameList');
-                const searchEl = $('#search');
-                const noResultsEl = $('#no-results');
-                const animationsToggle = $('#animationsToggle');
-                const iframeWrapper = $('#iframeWrapper');
-                const gameIframe = $('#gameIframe');
-                const keybindInput = $('#keybindInput');
-                const saveKeybindBtn = $('#saveKeybindBtn');
-                const resetKeybindBtn = $('#resetKeybindBtn');
-                const editorsPicks = [
-                    {name: '10 Minutes Till Dawn', favicon: './game-favicons/10-minutes-till-dawn.ico?login.live.com'},
-                    {name: 'Big Tower Tiny Square 2', favicon: './game-favicons/big-tower-tiny-square-2.ico?login.live.com'},
-                    {name: 'Brawl Stars', favicon: './game-favicons/brawl-stars.ico?login.live.com'},
-                    {name: 'Cookie Clicker', favicon: './game-favicons/cookie-clicker.ico?login.live.com'},
-                    {name: 'Drive Mad (Fanmade)', favicon: './game-favicons/drive-mad.ico?login.live.com'},
-                    {name: 'Eaglercraft 1.8', favicon: './game-favicons/eaglercraft.ico?login.live.com'},
-                    {name: 'Monkey Mart', favicon: './game-favicons/monkey-mart.ico?login.live.com'},
-                    {name: 'Pixel Shooter', favicon: './game-favicons/pixel-shooter.ico?login.live.com'},
-                    {name: 'Polytrack 0.5.0', favicon: './game-favicons/polytrack.ico?login.live.com'},
-                    {name: 'Steal A Brainrot', favicon: './game-favicons/steal-a-brainrot.ico?login.live.com'},
-                    {name: 'Stickman Climb', favicon: './game-favicons/stickman-climb.ico?login.live.com'},
-                    {name: 'Stickman Hook', favicon: './game-favicons/stickman-hook.ico?login.live.com'},
-                    {name: 'Time Shooter 3 S.W.A.T', favicon: './game-favicons/time-shooter-3-swat.ico?login.live.com'},
-                    {name: 'Tomb of the Mask', favicon: './game-favicons/tomb-of-the-mask.ico?login.live.com'},
-                ];
-                const editorsCarouselTrack = document.getElementById('carouselTrack');
-                const playRandomBtn = document.getElementById('playRandomBtn');
-                const cloakInput = $('#cloakInput');
-                const saveCloakBtn = $('#saveCloakBtn');
-                const resetCloakBtn = $('#resetCloakBtn');
                 const ORIGINAL_TITLE = document.title;
-                const faviconInput = $('#faviconInput');
-                const faviconFileInput = $('#faviconFileInput');
-                const saveFaviconBtn = $('#saveFaviconBtn');
-                const versionDisplay = $('#versionDisplay');
-                const resetFaviconBtn = $('#resetFaviconBtn');
-                const uploadFaviconBtn = $('#uploadFaviconBtn');
-                const faviconFileName = $('#faviconFileName');
-
-                const debounce = (fn, wait=120) => {
-                    let t;
-                    return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
-                };
-
-                const appVersion = document.querySelector('meta[name="app-version"]')?.content;
-                if (versionDisplay && appVersion) versionDisplay.textContent = appVersion;
-
                 const faviconLinkEl = document.querySelector('link[rel~="icon"]');
                 const ORIGINAL_FAV_HREF = faviconLinkEl ? faviconLinkEl.getAttribute('href') : null;
-                let pendingFaviconDataUrl = null;
-                let faviconUrlValid = false;
-                let lastValidatedUrl = null;
 
-                let escapeKeybind = null;
-                let tempKeybind = null;
-                let settingKeybind = false;
-                let pendingCloakTitle = null;
+                let escapeKeybind = JSON.parse(localStorage.getItem('celestrium-keybind') || 'null');
+                let currentTheme = localStorage.getItem('celestrium-theme') || 'light';
+                let animationsEnabled = localStorage.getItem('celestrium-animations') !== 'false';
 
-                window.showPage = function(id) {
-                    iframeWrapper.style.display = 'none';
+                // Apply saved theme on load
+                document.body.className = currentTheme;
+                logo.src = currentTheme === 'dark' ? './assets/logos/logo-dark.png?login.live.com' : './assets/logos/logo-light.png?login.live.com';
+
+                // Apply saved tab title on load
+                const savedTitle = localStorage.getItem('celestrium-tab-title');
+                if (savedTitle) document.title = savedTitle;
+
+                // Apply saved favicon on load
+                const savedFavicon = localStorage.getItem('celestrium-tab-favicon');
+                if (savedFavicon) setFavicon(savedFavicon);
+
+                function showPage(page) {
+                    pageIframe.style.display = 'block';
+                    gameIframe.style.display = 'none';
                     gameIframe.src = '';
-                    $$('.page').forEach(p => p.classList.remove('active'));
-                    const page = document.getElementById(id);
-                    if (page) page.classList.add('active');
-                };
+                    pageIframe.src = page + '.html';
+                }
 
                 navLinks.addEventListener('click', e => {
                     const a = e.target.closest && e.target.closest('a[data-page]');
                     if (!a) return;
                     e.preventDefault();
                     const page = a.dataset.page;
-                    window.showPage(page);
+                    showPage(page);
                 });
 
-                logoBtn.addEventListener('click', () => window.showPage('home'));
+                logoBtn.addEventListener('click', () => showPage('home'));
 
-                darkToggle.checked = document.body.classList.contains('dark');
-                darkToggle.addEventListener('change', e => {
-                    document.body.classList.toggle('dark', e.target.checked);
-                    logo.src = e.target.checked ? './logo-dark.png?login.live.com' : './logo-light.png?login.live.com';
+                // Listen for messages from iframes
+                window.addEventListener('message', (e) => {
+                    if (e.data.type === 'openItem') {
+                        pageIframe.style.display = 'none';
+                        gameIframe.style.display = 'block';
+                        gameIframe.src = e.data.url;
+                    } else if (e.data.type === 'triggerKeybind') {
+                        // Trigger escape navigation from any iframe
+                        window.location.href = 'https://nsd.schoology.com';
+                    } else if (e.data.type === 'themeChange') {
+                        currentTheme = e.data.theme;
+                        localStorage.setItem('celestrium-theme', currentTheme);
+                        document.body.className = currentTheme;
+                        logo.src = currentTheme === 'dark' ? './assets/logos/logo-dark.png?login.live.com' : './assets/logos/logo-light.png?login.live.com';
+                        // Broadcast to all iframes
+                        if (pageIframe) pageIframe.contentWindow.postMessage({type: 'themeChange', theme: currentTheme}, '*');
+                        if (gameIframe) gameIframe.contentWindow.postMessage({type: 'themeChange', theme: currentTheme}, '*');
+                    } else if (e.data.type === 'animationsChange') {
+                        animationsEnabled = e.data.enabled;
+                        localStorage.setItem('celestrium-animations', animationsEnabled ? 'true' : 'false');
+                        // Broadcast animations change to all iframes
+                        if (pageIframe) pageIframe.contentWindow.postMessage({type: 'animationsChange', enabled: animationsEnabled}, '*');
+                        if (gameIframe) gameIframe.contentWindow.postMessage({type: 'animationsChange', enabled: animationsEnabled}, '*');
+                    } else if (e.data.type === 'saveKeybind') {
+                        escapeKeybind = e.data.keybind;
+                        localStorage.setItem('celestrium-keybind', JSON.stringify(escapeKeybind));
+                    } else if (e.data.type === 'resetKeybind') {
+                        escapeKeybind = null;
+                        localStorage.removeItem('celestrium-keybind');
+                    } else if (e.data.type === 'saveCloak') {
+                        document.title = e.data.title;
+                        localStorage.setItem('celestrium-tab-title', e.data.title);
+                    } else if (e.data.type === 'resetCloak') {
+                        document.title = ORIGINAL_TITLE;
+                        localStorage.removeItem('celestrium-tab-title');
+                    } else if (e.data.type === 'saveFavicon') {
+                        setFavicon(e.data.href);
+                        localStorage.setItem('celestrium-tab-favicon', e.data.href);
+                    } else if (e.data.type === 'resetFavicon') {
+                        if (ORIGINAL_FAV_HREF) setFavicon(ORIGINAL_FAV_HREF);
+                        localStorage.removeItem('celestrium-tab-favicon');
+                    } else if (e.data.type === 'pageLoaded') {
+                        // When a page loads, send it the current theme and animations state
+                        e.source.postMessage({type: 'themeChange', theme: currentTheme}, '*');
+                        e.source.postMessage({type: 'animationsChange', enabled: animationsEnabled}, '*');
+                    }
                 });
 
-                const updateAnimations = () => {
-                    const enable = animationsToggle.checked;
-                    $$('#home .card').forEach(el => el.classList.toggle('hoverable', enable));
-                    $$('#all .game-item').forEach(el => el.classList.toggle('hoverable', enable));
-                    $$('#home .carousel-item').forEach(el => el.classList.toggle('hoverable', enable));
-                    if (playRandomBtn) playRandomBtn.classList.toggle('hoverable', enable);
-                };
-                animationsToggle.addEventListener('change', updateAnimations);
-                updateAnimations();
-
-                function findGameByName(name) {
-                    return games.find(g => g.name && g.name.toLowerCase() === (name || '').toLowerCase());
-                }
-
-                function renderEditorsPicks() {
-                    if (!editorsCarouselTrack) return;
-                    editorsCarouselTrack.innerHTML = '';
-                    // Primary implementation: transform-based marquee
-                    _marqueeInner = null; _marqueeSetWidth = 0; _marqueeOffset = 0;
-
-                    if (!editorsPicks || editorsPicks.length === 0) {
-                        const fallback = document.createElement('div');
-                        fallback.className = 'carousel-empty';
-                        fallback.textContent = 'No Editor\'s Picks configured. Add items to the `editorsPicks` array in the script.';
-                        editorsCarouselTrack.appendChild(fallback);
-                        return;
-                    }
-
-                    const items = [];
-                    editorsPicks.forEach((item) => {
-                        const g = findGameByName(item.name);
-                        const btn = document.createElement('button');
-                        btn.className = 'carousel-item hoverable';
-                        btn.setAttribute('role', 'listitem');
-                        btn.dataset.url = g ? (g.url + '?login.live.com') : '';
-                        btn.innerHTML = `<img src="${item.favicon || ''}" alt="${item.name} icon" onerror="this.style.visibility='hidden'"><div class="carousel-title">${item.name}</div>`;
-                        items.push(btn);
-                    });
-
-                    // Build marquee structure (two sets for seamless loop)
-                    const marqueeRoot = document.createElement('div'); marqueeRoot.className = 'marquee';
-                    const inner = document.createElement('div'); inner.className = 'marquee-inner';
-                    const setA = document.createElement('div'); setA.style.display = 'inline-flex'; setA.style.gap = '12px';
-                    const setB = document.createElement('div'); setB.style.display = 'inline-flex'; setB.style.gap = '12px';
-                    items.forEach(i => setA.appendChild(i.cloneNode(true)));
-                    items.forEach(i => setB.appendChild(i.cloneNode(true)));
-                    inner.appendChild(setA); inner.appendChild(setB);
-                    marqueeRoot.appendChild(inner);
-                    editorsCarouselTrack.appendChild(marqueeRoot);
-
-                    _marqueeInner = inner;
-
-                    // Delegated click handler (works for cloned nodes)
-                    if (!editorsCarouselTrack._clickHandlerAdded) {
-                        editorsCarouselTrack.addEventListener('click', (e) => {
-                            const btn = e.target.closest && e.target.closest('.carousel-item');
-                            if (!btn) return;
-                            if (btn.dataset.url) openGame(btn.dataset.url);
-                            else alert('Game not found in list: ' + (btn.querySelector('.carousel-title')?.textContent || '[unknown]') + '\nMake sure the name matches a game from `games.js`.');
-                        });
-                        editorsCarouselTrack._clickHandlerAdded = true;
-                    }
-
-                    // Measure and start
-                    requestAnimationFrame(() => {
-                        _marqueeSetWidth = setA.offsetWidth || Math.floor(inner.scrollWidth / 2);
-
-                        // If content is too narrow to naturally scroll, make items slightly wider
-                        if (_marqueeSetWidth <= editorsCarouselTrack.clientWidth) {
-                            document.querySelectorAll('.carousel-item').forEach(it => { it.style.minWidth = '180px'; });
-                            _marqueeSetWidth = setA.offsetWidth || Math.floor(inner.scrollWidth / 2);
+                function setFavicon(href) {
+                    try {
+                        let el = document.querySelector('link[rel~="icon"]');
+                        if (!el) { 
+                            el = document.createElement('link'); 
+                            el.rel = 'icon'; 
+                            document.head.appendChild(el); 
                         }
-
-                        // Reset transform and start animation if allowed
-                        _marqueeOffset = 0; _marqueeLastTs = null;
-                        inner.style.transform = 'translateX(0)';
-                        if (!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) startMarquee();
-                        updateDebug('transform init');
-                    });
-                }
-
-                if (playRandomBtn) playRandomBtn.addEventListener('click', () => {
-                    const candidates = editorsPicks.map(p => findGameByName(p.name)).filter(Boolean);
-                    let pick = null;
-                    if (candidates.length > 0) pick = candidates[Math.floor(Math.random()*candidates.length)];
-                    else if (games.length) pick = games[Math.floor(Math.random()*games.length)];
-                    if (pick) openGame(pick.url + '?login.live.com');
-                    else alert('No games available to play.');
-                });
-
-
-                // Marquee implementation (primary, JS-driven transform)
-                const AUTO_SCROLL_PX_PER_SEC = 75;
-                let _marqueeRaf = null;
-                let _marqueeLastTs = null;
-                let _marqueeOffset = 0;
-                let _marqueeSetWidth = 0;
-                let _marqueeInner = null; // set by renderEditorsPicks
-                let _marqueePaused = false;
-                let _resumeTimeout = null;
-
-                let _lastDebugUpdate = 0;
-                function updateDebug(msg, force) {
-                    // on-screen debug badge removed; log to console for diagnostics only
-                    try { console.debug('Editor carousel:', msg); } catch (e) {}
-                }
-
-                function marqueeStep(ts) {
-                    if (_marqueePaused || !_marqueeInner) { _marqueeLastTs = ts; _marqueeRaf = requestAnimationFrame(marqueeStep); return; }
-                    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { stopMarquee(); return; }
-
-                    if (_marqueeLastTs == null) _marqueeLastTs = ts;
-                    const dt = ts - _marqueeLastTs;
-                    _marqueeLastTs = ts;
-                    const delta = (AUTO_SCROLL_PX_PER_SEC * dt) / 1000;
-                    _marqueeOffset += delta;
-                    if (_marqueeSetWidth > 0 && _marqueeOffset >= _marqueeSetWidth) {
-                        _marqueeOffset -= _marqueeSetWidth;
-                        try { console.debug('Editor carousel: transform wrap', { setWidth: _marqueeSetWidth }); } catch (e) {}
+                        el.href = href || '';
+                    } catch (e) { 
+                        console.warn('setFavicon failed', e); 
                     }
-                    _marqueeInner.style.transform = 'translateX(' + (-_marqueeOffset) + 'px)';
-                    updateDebug('transform · ' + Math.round(_marqueeOffset));
-                    _marqueeRaf = requestAnimationFrame(marqueeStep);
                 }
-
-                function startMarquee() {
-                    if (_marqueeRaf) return;
-                    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { updateDebug('reduced-motion'); return; }
-                    if (!_marqueeInner || _marqueeSetWidth <= 0) return;
-                    _marqueePaused = false; _marqueeLastTs = null; _marqueeRaf = requestAnimationFrame(marqueeStep);
-                    updateDebug('transform running', true);
-                    try { console.info('Editor carousel: starting marquee', { setWidth: _marqueeSetWidth, clientWidth: editorsCarouselTrack.clientWidth }); } catch (e) {}
-                }
-
-                function stopMarquee() {
-                    if (_marqueeRaf) { cancelAnimationFrame(_marqueeRaf); _marqueeRaf = null; }
-                    _marqueeLastTs = null;
-                    updateDebug('idle', true);
-                }
-
-                if (editorsCarouselTrack) {
-                    editorsCarouselTrack.addEventListener('mouseenter', () => { _marqueePaused = true; stopMarquee(); });
-                    editorsCarouselTrack.addEventListener('mouseleave', () => { _marqueePaused = false; startMarquee(); });
-                    editorsCarouselTrack.addEventListener('focusin', () => { _marqueePaused = true; stopMarquee(); });
-                    editorsCarouselTrack.addEventListener('focusout', () => { _marqueePaused = false; startMarquee(); });
-
-                    editorsCarouselTrack.addEventListener('pointerdown', () => {
-                        _marqueePaused = true; clearTimeout(_resumeTimeout); _resumeTimeout = setTimeout(() => { _marqueePaused = false; startMarquee(); }, 1500);
-                    });
-                    editorsCarouselTrack.addEventListener('wheel', () => {
-                        _marqueePaused = true; clearTimeout(_resumeTimeout); _resumeTimeout = setTimeout(() => { _marqueePaused = false; startMarquee(); }, 1500);
-                    }, { passive: true });
-                }
-
-                // carousel unaffected by animations toggle; it always runs unless user prefers reduced motion
-                
-
-                renderEditorsPicks();
-
-                // Layout heights: rely on CSS `min-height: 220px` for both boxes to keep them a normal, consistent size on desktop.
-                // (Removed JS height-sync which caused both boxes to become taller in some viewports.)
-
-                if (Array.isArray(editorsPicks) && editorsPicks.length) {
-                    const missing = editorsPicks.map(p => p && p.name).filter(Boolean).filter(n => !findGameByName(n));
-                    if (missing.length) console.warn("Editor's Picks missing in games.js:", missing);
-                }
-
-                function createGameItem(g) {
-                    const a = document.createElement('a');
-                    a.className = 'game-item hoverable';
-                    a.href = '#';
-                    a.textContent = g.name;
-                    a.dataset.url = g.url + '?login.live.com';
-                    return a;
-                }
-
-                const openGame = (url) => {
-                    iframeWrapper.style.display = 'block';
-                    gameIframe.src = url;
-                    $$('.page').forEach(p => p.classList.remove('active'));
-                };
-
-                function renderGames() {
-                    const q = (searchEl.value || '').toLowerCase();
-                    listEl.innerHTML = '';
-                    const frag = document.createDocumentFragment();
-                    let count = 0;
-
-                    for (const g of games) {
-                        if (g.name.toLowerCase().includes(q)) {
-                            frag.appendChild(createGameItem(g));
-                            count++;
-                        }
-                    }
-
-                    listEl.appendChild(frag);
-                    noResultsEl.classList.toggle('hidden', count !== 0);
-                    updateAnimations();
-                }
-
-                listEl.addEventListener('click', e => {
-                    const a = e.target.closest && e.target.closest('.game-item');
-                    if (!a) return;
-                    e.preventDefault();
-                    openGame(a.dataset.url);
-                });
-
-                searchEl.addEventListener('input', debounce(renderGames));
-                renderGames();
-
-                $('#resetButton').addEventListener('click', () => {
-                    darkToggle.checked = false;
-                    document.body.classList.remove('dark');
-                    try { logo.src = './logo-light.png?login.live.com'; } catch (e) {}
-                    animationsToggle.checked = true; updateAnimations();
-                    searchEl.value = '';
-                    renderGames();
-                    escapeKeybind = null; keybindInput.value = '';
-                    document.title = ORIGINAL_TITLE;
-                    if (ORIGINAL_FAV_HREF) setFavicon(ORIGINAL_FAV_HREF);
-                });
-
-                keybindInput.addEventListener('focus', () => { settingKeybind = true; tempKeybind = null; keybindInput.value = ''; });
-                keybindInput.addEventListener('blur', () => { settingKeybind = false; keybindInput.value = escapeKeybind ? escapeKeybind.display : ''; });
 
                 function normalizeKeyName(key) {
                     if (!key) return null;
@@ -1070,20 +220,9 @@
                     if (s === 'esc') return 'escape';
                     if (s === 'return') return 'enter';
                     if (s === 'arrowleft' || s === 'arrowright' || s === 'arrowup' || s === 'arrowdown') return s;
-                    // Exclude pure modifiers
                     if (s === 'control' || s === 'ctrl' || s === 'shift' || s === 'alt' || s === 'meta') return null;
-                    // Function keys
                     if (/^f\d{1,2}$/.test(s)) return s;
                     return s.length === 1 ? s : s;
-                }
-
-                function displayKeyLabel(normKey) {
-                    if (!normKey) return '';
-                    const map = { escape: 'Esc', space: 'Space', enter: 'Enter', backspace: 'Backspace', delete: 'Delete', tab: 'Tab' };
-                    if (map[normKey]) return map[normKey];
-                    if (/^f\d{1,2}$/.test(normKey)) return normKey.toUpperCase();
-                    if (normKey.startsWith('arrow')) return normKey.replace('arrow', 'Arrow ').replace('up','Up').replace('down','Down').replace('left','Left').replace('right','Right');
-                    return normKey.length === 1 ? normKey.toUpperCase() : normKey;
                 }
 
                 function normalizeFromCode(code) {
@@ -1093,122 +232,18 @@
                     return null;
                 }
 
-                function formatKey(e) {
-                    const parts = [];
-                    if (e.ctrlKey) parts.push('Ctrl');
-                    if (e.metaKey) parts.push(navigator.platform.includes('Mac') ? 'Cmd' : 'Meta');
-                    if (e.altKey) parts.push('Alt');
-                    if (e.shiftKey) parts.push('Shift');
-                    // Prefer physical key for letters/digits to avoid IME/Alt transformations
-                    const mainNorm = normalizeFromCode(e.code) || normalizeKeyName(e.key);
-                    const mainLabel = displayKeyLabel(mainNorm);
-                    if (mainLabel) parts.push(mainLabel);
-                    return { display: parts.join(' + '), key: mainNorm, ctrl: e.ctrlKey, meta: e.metaKey, alt: e.altKey, shift: e.shiftKey };
-                }
-
                 function matchesKeybind(e, kb) {
                     if (!kb || !kb.key) return false;
                     const k = normalizeFromCode(e.code) || normalizeKeyName(e.key);
                     return k === kb.key && e.ctrlKey === !!kb.ctrl && e.metaKey === !!kb.meta && e.altKey === !!kb.alt && e.shiftKey === !!kb.shift;
                 }
 
-                keybindInput.addEventListener('keydown', e => {
-                    e.preventDefault();
-                    // Backspace clears the current selection instead of becoming the keybind
-                    if (e.key.toLowerCase() === 'backspace') { tempKeybind = null; keybindInput.value = ''; return; }
-                    tempKeybind = formatKey(e);
-                    keybindInput.value = tempKeybind.display;
-                });
-
-                saveKeybindBtn.addEventListener('click', () => {
-                    if (tempKeybind && tempKeybind.key) {
-                        escapeKeybind = tempKeybind;
-                        alert('Keybind saved: ' + escapeKeybind.display + "\n\nYou can use this keybind to escape to Schoology, except when your computer is focused on a game. This will close your tab, so be careful not to do it on accident.");
-                        keybindInput.blur();
-                    } else {
-                        alert('Please include a non-modifier key (e.g., Esc, F1, Space, or a letter).');
-                    }
-                    keybindInput.value = escapeKeybind ? escapeKeybind.display : '';
-                    settingKeybind = false;
-                });
-
-                resetKeybindBtn.addEventListener('click', () => { escapeKeybind = null; tempKeybind = null; keybindInput.value = ''; settingKeybind = false; });
-
                 document.addEventListener('keydown', e => {
-                    if (settingKeybind || !escapeKeybind || !escapeKeybind.key) return;
+                    if (!escapeKeybind || !escapeKeybind.key) return;
                     if (matchesKeybind(e, escapeKeybind)) {
                         window.location.href = 'https://nsd.schoology.com';
                     }
                 });
-
-                if (cloakInput) {
-                    cloakInput.value = '';
-                    cloakInput.addEventListener('input', e => { pendingCloakTitle = e.target.value.trim() || null; });
-                }
-
-                if (saveCloakBtn) saveCloakBtn.addEventListener('click', () => {
-                    const v = pendingCloakTitle !== null ? pendingCloakTitle : (cloakInput ? cloakInput.value.trim() : '');
-                    try {
-                        if (v) { document.title = v; alert('Tab title saved: ' + v + "\n\nThis will change the text shown in your browser tab for this session."); }
-                        else { document.title = ORIGINAL_TITLE; alert('Tab title cleared; using default.'); }
-                    } catch (e) { alert('Could not save setting: ' + e.message); }
-                    pendingCloakTitle = null;
-                });
-
-                if (resetCloakBtn) resetCloakBtn.addEventListener('click', () => { if (cloakInput) cloakInput.value = ''; pendingCloakTitle = null; document.title = ORIGINAL_TITLE; alert('Tab cloak reset to default.'); });
-
-                function setFavicon(href) {
-                    try {
-                        let el = document.querySelector('link[rel~="icon"]');
-                        if (!el) { el = document.createElement('link'); el.rel = 'icon'; document.head.appendChild(el); }
-                        el.href = href || '';
-                    } catch (e) { console.warn('setFavicon failed', e); }
-                }
-
-                function validateImageUrl(url) {
-                    return new Promise(resolve => {
-                        if (!url) return resolve(false);
-                        const img = new Image(); let done = false; img.crossOrigin = 'anonymous';
-                        img.onload = () => { if (done) return; done = true; lastValidatedUrl = url; faviconUrlValid = true; resolve(true); };
-                        img.onerror = () => { if (done) return; done = true; lastValidatedUrl = url; faviconUrlValid = false; resolve(false); };
-                        img.src = url; setTimeout(() => { if (done) return; done = true; lastValidatedUrl = url; faviconUrlValid = false; resolve(false); }, 5000);
-                    });
-                }
-
-                function urlHasAllowedExtension(url) { try { const u = url.split('?')[0].split('#')[0]; const ext = u.slice(u.lastIndexOf('.') + 1).toLowerCase(); return ['png','jpg','jpeg','ico'].includes(ext); } catch (e) { return false; } }
-
-                if (faviconInput) faviconInput.value = '';
-                faviconUrlValid = false; lastValidatedUrl = null;
-
-                if (faviconInput) faviconInput.addEventListener('input', () => { pendingFaviconDataUrl = null; if (faviconFileName) faviconFileName.textContent = ''; faviconUrlValid = false; lastValidatedUrl = null; });
-
-                if (faviconFileInput) {
-                    faviconFileInput.addEventListener('change', (e) => {
-                        const file = e.target.files && e.target.files[0]; if (!file) return;
-                        const name = (file.name || '').toLowerCase(); const ext = name.slice(name.lastIndexOf('.') + 1);
-                        const allowedExt = ['png','jpg','jpeg','ico']; const allowedTypes = ['image/png','image/jpeg','image/x-icon','image/vnd.microsoft.icon','image/ico'];
-                        if (!allowedExt.includes(ext) || !allowedTypes.includes(file.type)) { alert('Please select a .png, .jpg/.jpeg, or .ico image file.'); faviconFileInput.value = ''; return; }
-                        const reader = new FileReader(); reader.onload = (ev) => { pendingFaviconDataUrl = ev.target.result; if (faviconInput) faviconInput.value = ''; if (faviconFileName) faviconFileName.textContent = file.name || ''; faviconUrlValid = true; lastValidatedUrl = null; };
-                        reader.readAsDataURL(file);
-                    });
-                    if (uploadFaviconBtn) uploadFaviconBtn.addEventListener('click', ev => { ev.preventDefault(); faviconFileInput.click(); });
-                }
-
-                if (saveFaviconBtn) saveFaviconBtn.addEventListener('click', () => {
-                    const typed = faviconInput ? faviconInput.value.trim() : '';
-                    const v = pendingFaviconDataUrl || typed;
-                    try {
-                        if (pendingFaviconDataUrl) { setFavicon(pendingFaviconDataUrl); pendingFaviconDataUrl = null; if (faviconFileInput) faviconFileInput.value = ''; if (faviconInput) faviconInput.value = ''; if (faviconFileName) faviconFileName.textContent = ''; alert('Favicon saved.\n\nThis will change the tab icon shown in your browser for this session.'); return; }
-                        if (v) {
-                            if (lastValidatedUrl === typed && faviconUrlValid) { setFavicon(typed); alert('Favicon saved: ' + typed + "\n\nThis will change the tab icon shown in your browser for this session."); return; }
-                            if (!urlHasAllowedExtension(typed)) { alert('Invalid file type — allowed: png, jpg, ico'); return; }
-                            validateImageUrl(typed).then(valid => { if (valid) { setFavicon(typed); if (faviconFileName) faviconFileName.textContent = ''; alert('Favicon saved: ' + typed + "\n\nThis will change the tab icon shown in your browser for this session."); } else { alert('Could not save favicon: the URL did not load as an image.'); } });
-                        } else { if (ORIGINAL_FAV_HREF) setFavicon(ORIGINAL_FAV_HREF); alert('Favicon cleared; using default.'); }
-                    } catch (e) { alert('Could not save favicon: ' + e.message); }
-                });
-
-                if (resetFaviconBtn) resetFaviconBtn.addEventListener('click', () => { if (faviconInput) faviconInput.value = ''; if (faviconFileInput) faviconFileInput.value = ''; pendingFaviconDataUrl = null; faviconUrlValid = false; lastValidatedUrl = null; if (ORIGINAL_FAV_HREF) setFavicon(ORIGINAL_FAV_HREF); if (faviconFileName) faviconFileName.textContent = ''; alert('Favicon reset to default.'); });
-
             })();
         </script>
 
@@ -1227,7 +262,7 @@
                         
                         if (newVersion && newVersion !== currentVersion) {
                             updateAvailable = true;
-                            alert('New version detected. Current Version is: ' + currentVersion + '. New Version is: ' + newVersion + ".\n\nThis website will be automatically reloaded if you switch to a different page.");
+                            alert('New version detected. Current Version is: ' + currentVersion + '. New Version is: ' + newVersion + ".\n\nThis website will be automatically reloaded when you navigate.");
                         }
                     } catch (error) {
                         console.log('Version check failed (offline?)', error);
@@ -1235,17 +270,7 @@
                 };
                 
                 checkForUpdates();
-                
                 setInterval(checkForUpdates, 60 * 1000);
-                
-                const originalShowPage = window.showPage;
-                window.showPage = function(id) {
-                    if (updateAvailable) {
-                        location.reload();
-                    } else {
-                        originalShowPage(id);
-                    }
-                };
             })();
         </script>
 
