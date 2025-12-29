@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Celestrium Online Portal</title>
-        <meta name="app-version" content="3.13.1">
+        <meta name="app-version" content="3.14.1">
         <link rel="icon" type="image/x-icon" href="./favicon.ico?login.live.com">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -1061,6 +1061,37 @@
                 });
 
                 keybindInput.addEventListener('focus', () => { settingKeybind = true; tempKeybind = null; keybindInput.value = ''; });
+                keybindInput.addEventListener('blur', () => { settingKeybind = false; keybindInput.value = escapeKeybind ? escapeKeybind.display : ''; });
+
+                function normalizeKeyName(key) {
+                    if (!key) return null;
+                    const s = key.toLowerCase();
+                    if (s === ' ') return 'space';
+                    if (s === 'esc') return 'escape';
+                    if (s === 'return') return 'enter';
+                    if (s === 'arrowleft' || s === 'arrowright' || s === 'arrowup' || s === 'arrowdown') return s;
+                    // Exclude pure modifiers
+                    if (s === 'control' || s === 'ctrl' || s === 'shift' || s === 'alt' || s === 'meta') return null;
+                    // Function keys
+                    if (/^f\d{1,2}$/.test(s)) return s;
+                    return s.length === 1 ? s : s;
+                }
+
+                function displayKeyLabel(normKey) {
+                    if (!normKey) return '';
+                    const map = { escape: 'Esc', space: 'Space', enter: 'Enter', backspace: 'Backspace', delete: 'Delete', tab: 'Tab' };
+                    if (map[normKey]) return map[normKey];
+                    if (/^f\d{1,2}$/.test(normKey)) return normKey.toUpperCase();
+                    if (normKey.startsWith('arrow')) return normKey.replace('arrow', 'Arrow ').replace('up','Up').replace('down','Down').replace('left','Left').replace('right','Right');
+                    return normKey.length === 1 ? normKey.toUpperCase() : normKey;
+                }
+
+                function normalizeFromCode(code) {
+                    if (!code) return null;
+                    if (/^Key[A-Z]$/.test(code)) return code.slice(3).toLowerCase();
+                    if (/^Digit[0-9]$/.test(code)) return code.slice(5);
+                    return null;
+                }
 
                 function formatKey(e) {
                     const parts = [];
@@ -1068,21 +1099,34 @@
                     if (e.metaKey) parts.push(navigator.platform.includes('Mac') ? 'Cmd' : 'Meta');
                     if (e.altKey) parts.push('Alt');
                     if (e.shiftKey) parts.push('Shift');
-                    const main = e.key && e.key.length === 1 ? e.key.toUpperCase() : (e.key || '').toLowerCase();
-                    if (main) parts.push(main.length === 1 ? main : main);
-                    return { display: parts.join(' + '), mainKey: (main && main.length === 1) ? main.toLowerCase() : null, ctrl: e.ctrlKey, meta: e.metaKey, alt: e.altKey, shift: e.shiftKey };
+                    // Prefer physical key for letters/digits to avoid IME/Alt transformations
+                    const mainNorm = normalizeFromCode(e.code) || normalizeKeyName(e.key);
+                    const mainLabel = displayKeyLabel(mainNorm);
+                    if (mainLabel) parts.push(mainLabel);
+                    return { display: parts.join(' + '), key: mainNorm, ctrl: e.ctrlKey, meta: e.metaKey, alt: e.altKey, shift: e.shiftKey };
+                }
+
+                function matchesKeybind(e, kb) {
+                    if (!kb || !kb.key) return false;
+                    const k = normalizeFromCode(e.code) || normalizeKeyName(e.key);
+                    return k === kb.key && e.ctrlKey === !!kb.ctrl && e.metaKey === !!kb.meta && e.altKey === !!kb.alt && e.shiftKey === !!kb.shift;
                 }
 
                 keybindInput.addEventListener('keydown', e => {
                     e.preventDefault();
+                    // Backspace clears the current selection instead of becoming the keybind
+                    if (e.key.toLowerCase() === 'backspace') { tempKeybind = null; keybindInput.value = ''; return; }
                     tempKeybind = formatKey(e);
                     keybindInput.value = tempKeybind.display;
                 });
 
                 saveKeybindBtn.addEventListener('click', () => {
-                    if (tempKeybind && tempKeybind.mainKey) {
+                    if (tempKeybind && tempKeybind.key) {
                         escapeKeybind = tempKeybind;
                         alert('Keybind saved: ' + escapeKeybind.display + "\n\nYou can use this keybind to escape to Schoology, except when your computer is focused on a game. This will close your tab, so be careful not to do it on accident.");
+                        keybindInput.blur();
+                    } else {
+                        alert('Please include a non-modifier key (e.g., Esc, F1, Space, or a letter).');
                     }
                     keybindInput.value = escapeKeybind ? escapeKeybind.display : '';
                     settingKeybind = false;
@@ -1091,8 +1135,8 @@
                 resetKeybindBtn.addEventListener('click', () => { escapeKeybind = null; tempKeybind = null; keybindInput.value = ''; settingKeybind = false; });
 
                 document.addEventListener('keydown', e => {
-                    if (settingKeybind || !escapeKeybind || !escapeKeybind.mainKey) return;
-                    if (e.key.toLowerCase() === escapeKeybind.mainKey && e.ctrlKey === !!escapeKeybind.ctrl && e.metaKey === !!escapeKeybind.meta && e.altKey === !!escapeKeybind.alt && e.shiftKey === !!escapeKeybind.shift) {
+                    if (settingKeybind || !escapeKeybind || !escapeKeybind.key) return;
+                    if (matchesKeybind(e, escapeKeybind)) {
                         window.location.href = 'https://nsd.schoology.com';
                     }
                 });
