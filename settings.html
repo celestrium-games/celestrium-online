@@ -194,7 +194,7 @@
         <h2 class="mb-10">Advanced</h2>
         <div class="setting-row">
             <button id="resetButton">Reset All Settings to Default</button>
-            <p class="muted">Version <span id="versionDisplay">4.0.0</span></p>
+            <p class="muted">Version <span id="versionDisplay">4.0.13</span></p>
         </div>
     </div>
 
@@ -535,6 +535,9 @@
                 if (e.data.type === 'themeChange') {
                     document.body.className = e.data.theme;
                     darkToggle.checked = e.data.theme === 'dark';
+                } else if (e.data.type === 'versionUpdate') {
+                    const versionEl = document.getElementById('versionDisplay');
+                    if (versionEl) versionEl.textContent = e.data.version;
                 }
             });
 
