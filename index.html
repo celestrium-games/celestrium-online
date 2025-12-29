@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Celestrium Online Portal</title>
-        <meta name="app-version" content="3.12.3">
+        <meta name="app-version" content="3.13.1">
         <link rel="icon" type="image/x-icon" href="./favicon.ico?login.live.com">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -197,12 +197,11 @@
                 padding: 50px 20px;
                 text-align: center;
                 color: var(--subtext);
-                display: none;
             }
 
-            #no-results svg {
-                width: 85px;
-                height: 85px;
+            #no-results img {
+                width: 250px;
+                height: 250px;
                 opacity: 0.5;
                 margin-bottom: 10px;
             }
@@ -323,6 +322,7 @@
                 .carousel-item { min-width:220px; max-width:260px; padding:18px; }
                 .carousel-item img { width:84px; height:84px; }
                 .editor-carousel { gap:18px; }
+                #no-results img { width:250px; height:250px; }
             }
 
 
@@ -579,11 +579,8 @@
 
             <div class="games-container">
                 <div id="gameList"></div>
-                <div id="no-results">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="3" y1="3" x2="21" y2="21"></line>
-                    </svg>
+                <div id="no-results" class="hidden">
+                    <img src="./invalid-search.png?login.live.com" alt="No Search Results">
                     <p>No games match your query. Please check your spelling or adjust your search term.</p>
                 </div>
             </div>
