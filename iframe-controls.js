@@ -2,6 +2,28 @@
 (function() {
     'use strict';
 
+    // Add overflow handling for the control bar
+    const style = document.createElement('style');
+    style.textContent = `
+        html {
+            height: 100%;
+        }
+        
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        
+        body > * {
+            max-height: calc(100vh - 60px);
+            overflow: auto;
+        }
+    `;
+    document.head.appendChild(style);
+
     // Create control bar
     const controlBar = document.createElement('div');
     controlBar.className = 'iframe-control-bar';
