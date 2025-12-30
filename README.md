@@ -16,6 +16,7 @@ Games are organized into a searchable, curated library. Links open in a lightwei
 ## Changelog (Major Updates Only)
 
 - v4 — Major Architecture Refactor
+    - v4.2 — Addition of Fullscreen & About:Blank Options for Games
 	- v4.0 — Major Architecture Refactor (Modular Pages)
 - v3 — Major UI Overhaul
     - v3.7 — Homepage Rework

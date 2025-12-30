@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Celestrium Online Portal</title>
-        <meta name="app-version" content="4.0.17">
+        <meta name="app-version" content="4.2.1">
         <link rel="icon" type="image/x-icon" href="./assets/favicons/favicon.ico?login.live.com">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -76,9 +76,10 @@
 
             #gameIframe {
                 width: 100%;
-                height: calc(100vh - 86px);
+                height: calc(100vh - 86px - 60px);
                 border: none;
                 display: none;
+                transition: height 0.3s ease;
             }
 
             body.dark nav {
@@ -162,6 +163,168 @@
                         pageIframe.style.display = 'none';
                         gameIframe.style.display = 'block';
                         gameIframe.src = e.data.url;
+                        
+                        // Inject control bar script into game iframe after it loads
+                        gameIframe.onload = () => {
+                            try {
+                                const doc = gameIframe.contentDocument;
+                                
+                                // Inject Font Awesome CSS if not already present
+                                if (!doc.querySelector('link[href*="font-awesome"]')) {
+                                    const faLink = doc.createElement('link');
+                                    faLink.rel = 'stylesheet';
+                                    faLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
+                                    doc.head.appendChild(faLink);
+                                }
+                                
+                                // Inject control bar CSS as inline style
+                                const style = doc.createElement('style');
+                                style.textContent = `
+                                    .iframe-control-bar {
+                                        position: fixed;
+                                        bottom: 0;
+                                        left: 0;
+                                        right: 0;
+                                        height: 60px;
+                                        background: #ffffff;
+                                        border-top: 1px solid #ddd;
+                                        display: flex;
+                                        justify-content: flex-end;
+                                        align-items: center;
+                                        gap: 15px;
+                                        padding: 0 20px;
+                                        box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+                                        z-index: 100;
+                                        transition: all 0.3s ease;
+                                    }
+                                    
+                                    body.dark .iframe-control-bar {
+                                        background: #1f2128;
+                                        border-top-color: #444;
+                                        box-shadow: 0 -2px 12px rgba(0,0,0,0.3);
+                                    }
+                                    
+                                    .iframe-control-btn {
+                                        width: 48px;
+                                        height: 48px;
+                                        border: none;
+                                        border-radius: 8px;
+                                        background: #4a90e2;
+                                        color: white;
+                                        cursor: pointer;
+                                        font-size: 1.1rem;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        transition: background 0.2s, transform 0.2s;
+                                    }
+                                    
+                                    .iframe-control-btn:hover {
+                                        background: #4a90e2;
+                                        transform: scale(1.05);
+                                        opacity: 0.9;
+                                    }
+                                    
+                                    .iframe-control-btn:active {
+                                        transform: scale(0.95);
+                                    }
+                                    
+                                    body.dark .iframe-control-btn {
+                                        background: #5ea8ff;
+                                    }
+                                    
+                                    body.dark .iframe-control-btn:hover {
+                                        background: #5ea8ff;
+                                        opacity: 0.8;
+                                    }
+                                `;
+                                doc.head.appendChild(style);
+                                
+                                // Inject control bar script as inline script
+                                const script = doc.createElement('script');
+                                script.textContent = `
+                                    (function() {
+                                        'use strict';
+
+                                        // Create control bar
+                                        const controlBar = document.createElement('div');
+                                        controlBar.className = 'iframe-control-bar';
+                                        
+                                        // Create fullscreen button
+                                        const fullscreenBtn = document.createElement('button');
+                                        fullscreenBtn.className = 'iframe-control-btn fullscreen-btn';
+                                        fullscreenBtn.title = 'Toggle Fullscreen';
+                                        fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+                                        
+                                        // Create external link button
+                                        const externalBtn = document.createElement('button');
+                                        externalBtn.className = 'iframe-control-btn external-btn';
+                                        externalBtn.title = 'Open in About:Blank Tab';
+                                        externalBtn.innerHTML = '<i class="fas fa-external-link-alt"></i>';
+                                        
+                                        // Add buttons to control bar
+                                        controlBar.appendChild(fullscreenBtn);
+                                        controlBar.appendChild(externalBtn);
+                                        
+                                        // Add control bar to page when DOM is ready
+                                        if (document.body) {
+                                            document.body.appendChild(controlBar);
+                                        } else {
+                                            document.addEventListener('DOMContentLoaded', () => {
+                                                document.body.appendChild(controlBar);
+                                            });
+                                        }
+                                        
+                                        let isFullscreen = false;
+                                        
+                                        fullscreenBtn.addEventListener('click', () => {
+                                            isFullscreen = !isFullscreen;
+                                            
+                                            if (isFullscreen) {
+                                                window.parent.postMessage({type: 'toggleNavbar', hidden: true}, '*');
+                                                fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+                                                fullscreenBtn.title = 'Exit Fullscreen';
+                                                controlBar.classList.add('fullscreen-active');
+                                            } else {
+                                                window.parent.postMessage({type: 'toggleNavbar', hidden: false}, '*');
+                                                fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+                                                fullscreenBtn.title = 'Toggle Fullscreen';
+                                                controlBar.classList.remove('fullscreen-active');
+                                            }
+                                        });
+                                        
+                                        externalBtn.addEventListener('click', () => {
+                                            const currentUrl = window.location.href;
+                                            const cleanUrl = currentUrl.split('?')[0];
+                                            
+                                            window.parent.postMessage({
+                                                type: 'openExternal',
+                                                url: cleanUrl
+                                            }, '*');
+                                        });
+                                        
+                                        window.addEventListener('message', (e) => {
+                                            if (e.data.type === 'navbarStateChange') {
+                                                if (e.data.hidden) {
+                                                    isFullscreen = true;
+                                                    fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+                                                    fullscreenBtn.title = 'Exit Fullscreen';
+                                                    controlBar.classList.add('fullscreen-active');
+                                                } else {
+                                                    isFullscreen = false;
+                                                    fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+                                                    fullscreenBtn.title = 'Toggle Fullscreen';
+                                                    controlBar.classList.remove('fullscreen-active');
+                                                }
+                                            }
+                                        });
+                                    })();
+                                `;
+                                doc.body.appendChild(script);
+                            } catch (err) {
+                                console.warn('Could not inject iframe controls:', err);
+                            }
+                        };
                     } else if (e.data.type === 'triggerKeybind') {
                         // Trigger escape navigation from any iframe
                         window.location.href = 'https://nsd.schoology.com';
@@ -204,6 +367,37 @@
                         // Send version to settings page
                         const version = document.querySelector('meta[name="app-version"]')?.content;
                         e.source.postMessage({type: 'versionUpdate', version: version}, '*');
+                    } else if (e.data.type === 'toggleNavbar') {
+                        // Handle navbar toggle for fullscreen
+                        const nav = document.querySelector('nav');
+                        if (e.data.hidden) {
+                            nav.style.display = 'none';
+                            gameIframe.style.height = '100vh';
+                        } else {
+                            nav.style.display = 'flex';
+                            gameIframe.style.height = 'calc(100vh - 86px)';
+                        }
+                        // Notify the iframe about navbar state change
+                        gameIframe.contentWindow.postMessage({type: 'navbarStateChange', hidden: e.data.hidden}, '*');
+                    } else if (e.data.type === 'openExternal') {
+                        // Open the game in an about:blank tab
+                        const newTab = window.open('about:blank');
+                        newTab.document.write(`
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <title>Game</title>
+                                <style>
+                                    body { margin: 0; padding: 0; }
+                                    iframe { width: 100%; height: 100vh; border: none; display: block; }
+                                </style>
+                            </head>
+                            <body>
+                                <iframe src="${e.data.url}?login.live.com"></iframe>
+                            </body>
+                            </html>
+                        `);
+                        newTab.document.close();
                     }
                 });
 
