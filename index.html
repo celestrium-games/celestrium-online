@@ -102,7 +102,7 @@
             </div>
         </nav>
 
-        <iframe id="pageIframe" src="home.html"></iframe>
+        <iframe id="pageIframe" src="./home.html?login.live.com"></iframe>
         <iframe id="gameIframe" src=""></iframe>
 
         <script>
@@ -144,7 +144,7 @@
                     pageIframe.style.display = 'block';
                     gameIframe.style.display = 'none';
                     gameIframe.src = '';
-                    pageIframe.src = page + '.html';
+                    pageIframe.src = './' + page + '.html?login.live.com';
                 }
 
                 navLinks.addEventListener('click', e => {
