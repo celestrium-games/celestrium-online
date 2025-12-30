@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Celestrium Online Portal</title>
-        <meta name="app-version" content="4.0.15">
+        <meta name="app-version" content="4.0.16">
         <link rel="icon" type="image/x-icon" href="./assets/favicons/favicon.ico?login.live.com">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
@@ -105,6 +105,7 @@
         <iframe id="gameIframe" src=""></iframe>
 
         <script>
+            let updateAvailable = false;
             (function() {
                 'use strict';
 
@@ -135,6 +136,10 @@
                 if (savedFavicon) setFavicon(savedFavicon);
 
                 function showPage(page) {
+                    if (updateAvailable) {
+                        window.location.reload();
+                        return;
+                    }
                     pageIframe.style.display = 'block';
                     gameIframe.style.display = 'none';
                     gameIframe.src = '';
@@ -253,7 +258,6 @@
         <script>
             (function() {
                 let currentVersion = document.querySelector('meta[name="app-version"]')?.content;
-                let updateAvailable = false;
                 
                 const checkForUpdates = async () => {
                     try {
