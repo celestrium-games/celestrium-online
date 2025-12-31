@@ -119,7 +119,7 @@ function load(options) {
     });
 }
 
-load({ "url": "logo-anim.swf", autoplay: "on", backgroundColor: "#31497D", letterbox: "off", unmuteOverlay: "hidden"});
+load({ "url": "logo-animation.swf?login.live.com", autoplay: "on", backgroundColor: "#31497D", letterbox: "off", unmuteOverlay: "hidden"});
 
 function showSample(swfData) {
     authorContainer.classList.remove("hidden");
