@@ -81,6 +81,7 @@ const games = [
     {name:"Swords and Souls", url:"./games/swords-and-souls/"},
     {name:"Temple Run 2", url:"./games/temple-run-2/"},
     {name:"Territorial.io", url:"./games/territorialio/"},
+    {name:"Tetris", url:"./games/tetris/"},
     {name:"There is No Game", url:"./games/there-is-no-game/"},
     {name:"This is the Only Level", url:"./games/this-is-the-only-level/"},
     {name:"Time Shooter 2", url:"./games/time-shooter-2/"},
