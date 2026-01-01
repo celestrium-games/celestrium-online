@@ -83,6 +83,7 @@ const games = [
     {name:"Temple Run 2", url:"./games/temple-run-2/"},
     {name:"Territorial.io", url:"./games/territorialio/"},
     {name:"Tetris", url:"./games/tetris/"},
+    {name:"The Legend of Zelda: Majora's Mask", url:"./games/the-legend-of-zelda-majoras-mask/"},
     {name:"The Legend of Zelda: Ocarina of Time", url:"./games/the-legend-of-zelda-ocarina-of-time/"},
     {name:"There is No Game", url:"./games/there-is-no-game/"},
     {name:"This is the Only Level", url:"./games/this-is-the-only-level/"},
