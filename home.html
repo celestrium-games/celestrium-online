@@ -165,20 +165,20 @@
             document.body.className = localStorage.getItem('celestrium-theme') || 'light';
 
             const editorsPicks = [
-                {name: '10 Minutes Till Dawn', favicon: './assets/favicons/game-favicons/10-minutes-till-dawn.ico?login.live.com'},
-                {name: 'Big Tower Tiny Square 2', favicon: './assets/favicons/game-favicons/big-tower-tiny-square-2.ico?login.live.com'},
-                {name: 'Brawl Stars', favicon: './assets/favicons/game-favicons/brawl-stars.ico?login.live.com'},
-                {name: 'Cookie Clicker', favicon: './assets/favicons/game-favicons/cookie-clicker.ico?login.live.com'},
-                {name: 'Drive Mad (Fanmade)', favicon: './assets/favicons/game-favicons/drive-mad.ico?login.live.com'},
-                {name: 'Eaglercraft 1.8', favicon: './assets/favicons/game-favicons/eaglercraft.ico?login.live.com'},
-                {name: 'Monkey Mart', favicon: './assets/favicons/game-favicons/monkey-mart.ico?login.live.com'},
-                {name: 'Pixel Shooter', favicon: './assets/favicons/game-favicons/pixel-shooter.ico?login.live.com'},
-                {name: 'PolyTrack 0.5.0', favicon: './assets/favicons/game-favicons/polytrack.ico?login.live.com'},
-                {name: 'Steal A Brainrot', favicon: './assets/favicons/game-favicons/steal-a-brainrot.ico?login.live.com'},
-                {name: 'Stickman Climb', favicon: './assets/favicons/game-favicons/stickman-climb.ico?login.live.com'},
-                {name: 'Stickman Hook', favicon: './assets/favicons/game-favicons/stickman-hook.ico?login.live.com'},
-                {name: 'Time Shooter 3 S.W.A.T', favicon: './assets/favicons/game-favicons/time-shooter-3-swat.ico?login.live.com'},
-                {name: 'Tomb of the Mask', favicon: './assets/favicons/game-favicons/tomb-of-the-mask.ico?login.live.com'},
+                '10 Minutes Till Dawn',
+                'Big Tower Tiny Square 2',
+                'Brawl Stars',
+                'Cookie Clicker',
+                'Drive Mad (Fanmade)',
+                'Eaglercraft 1.8',
+                'Monkey Mart',
+                'Pixel Shooter',
+                'PolyTrack 0.5.0',
+                'Steal A Brainrot',
+                'Stickman Climb',
+                'Stickman Hook',
+                'Time Shooter 3 S.W.A.T',
+                'Tomb of the Mask',
             ];
 
             const editorsCarouselTrack = document.getElementById('carouselTrack');
@@ -216,12 +216,12 @@
 
                 const items = [];
                 editorsPicks.forEach((item) => {
-                    const g = findGameByName(item.name);
+                    const g = findGameByName(item);
                     const btn = document.createElement('button');
                     btn.className = 'carousel-item hoverable';
                     btn.setAttribute('role', 'listitem');
                     btn.dataset.url = g ? (g.url + '?login.live.com') : '';
-                    btn.innerHTML = `<img src="${item.favicon || ''}" alt="${item.name} icon" onerror="this.style.visibility='hidden'"><div class="carousel-title">${item.name}</div>`;
+                    btn.innerHTML = `<img src="${g.url}/favicon.png?login.live.com" style="border-radius: 30px;" alt="${item} Icon" onerror="this.style.visibility='hidden'"><div class="carousel-title">${item}</div>`;
                     items.push(btn);
                 });
 
