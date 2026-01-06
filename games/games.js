@@ -52,7 +52,6 @@ const games = [
     {name:"Moto X 3M - Winter Land", url:"./games/motox3m-winterland/"},
     {name:"N-Gon", url:"./games/ngon/"},
     {name:"Only Up", url:"./games/only-up/"},
-    {name:"OvO", url:"./games/ovo/"},
     {name:"OvO Dimensions", url:"./games/ovo-dimensions/"},
     {name:"Paper.io 2", url:"./games/paperio-2/"},
     {name:"Pixel Shooter", url:"./games/pixel-shooter/"},
