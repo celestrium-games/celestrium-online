@@ -2,7 +2,7 @@ const games = [
     {name:"1 On 1 Soccer", url:"./games/1on1-soccer/"},
     {name:"1v1.lol", url:"./games/1v1lol/"},
     {name:"10 Bullets", url:"./games/10-bullets/"},
-    {name:"10 Minutes Till Dawn", url:"./games/10-minutes-till-dawn/"},
+    //{name:"10 Minutes Till Dawn", url:"./games/10-minutes-till-dawn/"},
     {name:"2048", url:"./games/2048/"},
     {name:"A Dance of Fire and Ice", url:"./games/a-dance-of-fire-and-ice/"},
     {name:"Age of War", url:"./games/age-of-war/"},
