@@ -24,6 +24,7 @@ const games = [
     {name:"Cookie Clicker", url:"./games/cookie-click/"},
     {name:"Dadish 3", url:"./games/dadish-3/"},
     {name:"Death Run 3D", url:"./games/death-run-3d/"},
+    {name:"Doodle Jump", url:"./games/doodle-jump/"},
     {name:"Doomz.io", url:"./games/doomzio/"},
     {name:"Drift Boss", url:"./games/drift-boss/"},
     {name:"Drive Mad (Fanmade)", url:"./games/drive-mad/"},
