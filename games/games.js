@@ -39,6 +39,7 @@ const games = [
     {name:"Hole.io", url:"./games/holeio/"},
     {name:"Hollow Knight", url:"./games/hollow-knight/"},
     {name:"Justfall.lol", url:"./games/justfalllol/"},
+    {name:"Kingdom Rush", url:"./games/kingdom-rush/"},
     {name:"Knights Battle Arena", url:"./games/knights-battle-arena/"},
     {name:"Learn to Fly 3", url:"./games/learn-to-fly-3/"},
     {name:"Melon Playground", url:"./games/melon-playground/"},
